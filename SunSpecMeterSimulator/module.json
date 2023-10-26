@@ -1,0 +1,18 @@
+{
+    "id": "{ADDC891F-6B19-B116-C918-A33FF5B6629A}",
+    "name": "SunSpecMeterSimulator",
+    "type": 3,
+    "vendor": "Simulator | Emulator",
+    "aliases": [
+        "Fronius Smart Meter IP Simulator"
+    ],
+    "parentRequirements": [
+        "{C8792760-65CF-4C53-B5C7-A30FCC84FEFE}"
+    ],
+    "childRequirements": [],
+    "implemented": [
+        "{7A1272A4-CBDB-46EF-BFC6-DCF4A53D2FC7}"
+    ],
+    "prefix": "SSMS",
+    "url": ""
+}

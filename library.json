@@ -1,0 +1,12 @@
+{
+    "id": "{780FF3EC-7469-B14F-D662-E77E2B00A757}",
+    "name": "IPS_PG EnergyMeter",
+    "author": "PreinfalkG",
+    "url": "",
+    "compatibility": {
+        "version": "6.4"
+    },
+    "version": "0.1",
+    "build": 1,
+    "date": 1
+}
