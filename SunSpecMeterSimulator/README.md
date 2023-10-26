@@ -1,5 +1,10 @@
 # SunSpecMeterSimulator
-Beschreibung des Moduls.
+Simuliert einen Fronius Smart Meter IP
+
+Prafix: SSMS  (SunSpec Smart Meter Simulator)
+
+Code is under develoment!
+
 
 ### Inhaltsverzeichnis
 

@@ -1,5 +1,125 @@
 {
-    "elements": [],
-    "actions": [],
+    "elements": [
+
+        { "name": "EnableSSMS", "type": "CheckBox", "caption": "Enable SunSpec Smart Meter Simulator" },
+        { "name": "MeterName", "type": "ValidationTextBox", "caption": "Name (internal)" },
+        {   "type": "ExpansionPanel",
+            "caption": "Meter Settings",
+            "expanded": true,
+            "visible": true,
+            "items": [
+                { "name": "MeterManufacturer", "type": "ValidationTextBox", "caption": "Manufacturer" },
+                { "name": "MeterDeviceModel", "type": "ValidationTextBox", "caption": "Device model" },
+                { "name": "MeterOptions", "type": "ValidationTextBox", "caption": "Device model" },
+                { "name": "MeterSoftware", "type": "ValidationTextBox", "caption": "Software Version" },
+                { "name": "MeterSerialnumber", "type": "ValidationTextBox", "caption": "Serialnumber" },
+                { "name": "MeterModbusPort", "type": "NumberSpinner", "caption": "Modbus Port" },
+                { "name": "MeterModbusAddress", "type": "NumberSpinner", "caption": "Modbus Address" },
+                { "name": "MeterSunSpecModel", "type": "Select", "caption": "SunSpec Meter Modbus Map (float)",  "enabled": false, 
+                    "options": [
+                        {
+                            "label": "single phase [211]",
+                            "value": 211
+                        },
+                        {
+                            "label": "split phase [212]",
+                            "value": 212
+                        },
+                        {
+                            "label": "three phase [213]",
+                            "value": 213
+                        }     
+                    ]                                   
+                }
+            ]
+        }, 
+
+        { "type": "ExpansionPanel", "caption": "Virtual Meter Register Values", "expanded": true, "visible": true, 
+            "items": [
+
+                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40096_Hz",     "caption": "40096 - AC Frequency" },
+                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40098_W",      "caption": "40098 - AC Power" },
+                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40100_WphA",   "caption": "40100 - AC Power Phase A" },
+                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40102_WphB",   "caption": "40102 - AC Power Phase B" },
+                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40104_WphC",   "caption": "40104 - AC Power Phase C" }
+            
+                ]
+        },
+
+        {   "name": "LogLevel",
+            "type": "Select",
+            "caption": "Debug/Log Level",
+            "options": [
+                {
+                    "label": "ALL",
+                    "value": 9
+                },
+                {
+                    "label": "TEST",
+                    "value": 8
+                },
+                {
+                    "label": "TRACE",
+                    "value": 7
+                },
+                {
+                    "label": "COMMUNICATION",
+                    "value": 6
+                },
+                {
+                    "label": "DEBUG",
+                    "value": 5
+                },
+                {
+                    "label": "INFO",
+                    "value": 4
+                },
+                {
+                    "label": "WARN",
+                    "value": 3
+                },
+                {
+                    "label": "ERROR",
+                    "value": 2
+                },
+                {
+                    "label": "FATAL",
+                    "value": 1
+                },
+                {
+                    "label": "OFF",
+                    "value": 0
+                }
+            ]
+        }
+
+
+    ],
+    "actions": [
+        {
+            "type": "ExpansionPanel",
+            "caption": "Reset and Profiling Functions",
+            "expanded": true,
+            "visible": true,
+            "items": [
+                {
+                    "type": "Button",
+                    "caption": "Reset Counter Variables",
+                    "onClick": "SSMS_ResetCounterVariables($id, 'ModulForm');"
+                },
+                     {
+                    "type": "Button",
+                    "caption": "Get 'Profiling Data'",
+                    "onClick": "SSMS_GetProfilingDataAsText($id, 'ModulForm');"
+                },                 
+                {
+                    "type": "Button",
+                    "caption": "Reset 'Profiling Data'",
+                    "onClick": "SSMS_Reset_ProfilingData($id, 'ModulForm');"
+                }                                 
+            ]
+        }
+
+    ],
     "status": []
 }
