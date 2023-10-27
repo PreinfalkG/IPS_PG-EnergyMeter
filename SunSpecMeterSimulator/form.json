@@ -3,10 +3,7 @@
 
         { "name": "EnableSSMS", "type": "CheckBox", "caption": "Enable SunSpec Smart Meter Simulator" },
         { "name": "MeterName", "type": "ValidationTextBox", "caption": "Name (internal)" },
-        {   "type": "ExpansionPanel",
-            "caption": "Meter Settings",
-            "expanded": true,
-            "visible": true,
+        {   "type": "ExpansionPanel", "caption": "Meter Settings", "expanded": false, "visible": true,
             "items": [
                 { "name": "MeterManufacturer", "type": "ValidationTextBox", "caption": "Manufacturer" },
                 { "name": "MeterDeviceModel", "type": "ValidationTextBox", "caption": "Device model" },
@@ -34,67 +31,155 @@
             ]
         }, 
 
-        { "type": "ExpansionPanel", "caption": "Virtual Meter Register Values", "expanded": true, "visible": true, 
-            "items": [
-
-                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40096_Hz",     "caption": "40096 - AC Frequency" },
-                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40098_W",      "caption": "40098 - AC Power" },
-                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40100_WphA",   "caption": "40100 - AC Power Phase A" },
-                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40102_WphB",   "caption": "40102 - AC Power Phase B" },
-                { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40104_WphC",   "caption": "40104 - AC Power Phase C" }
-            
-                ]
-        },
-
-        {   "name": "LogLevel",
-            "type": "Select",
-            "caption": "Debug/Log Level",
-            "options": [
+        {  "name": "LogLevel", "type": "Select", "caption": "Debug/Log Level", "options": [
                 {
                     "label": "ALL",
                     "value": 9
-                },
-                {
+                }, {
                     "label": "TEST",
                     "value": 8
-                },
-                {
+                }, {
                     "label": "TRACE",
                     "value": 7
-                },
-                {
+                }, {
                     "label": "COMMUNICATION",
                     "value": 6
-                },
-                {
+                }, {
                     "label": "DEBUG",
                     "value": 5
-                },
-                {
+                }, {
                     "label": "INFO",
                     "value": 4
-                },
-                {
+                }, {
                     "label": "WARN",
                     "value": 3
-                },
-                {
+                }, {
                     "label": "ERROR",
                     "value": 2
-                },
-                {
+                }, {
                     "label": "FATAL",
                     "value": 1
-                },
-                {
+                }, {
                     "label": "OFF",
                     "value": 0
                 }
             ]
+        },
+        
+        { "name": "selMeterDataSource", "type": "Select", "caption": "Source for Meter Data",  "enabled": true, 
+            "options": [
+                {
+                    "label": "[0] all Values '0.0'",
+                    "value": 0
+                }, {
+                    "label": "[1] Link to Variables",
+                    "value": 1
+                }, {
+                    "label": "[2] Update Function",
+                    "value": 2
+                }, {
+                    "label": "[3] use Sample Values",
+                    "value": 3
+                }          
+            ]                                   
+        },
+
+
+        { "name": "panelLinkToVariables", "type": "ExpansionPanel", "caption": "Meter Register Value - link to Variables", "expanded": false, "visible": false, 
+            "items": [
+                { "type": "ExpansionPanel", "caption": "Register 40070 - 40078 :: Current [A]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40072", "caption": "40072 - AC Total Current" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40074", "caption": "40074 - AC Phase-A Current" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40076", "caption": "40076 - AC Phase-B Current" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40078", "caption": "40078 - AC Phase-C Current" }
+                    ]
+                }, 
+                { "type": "ExpansionPanel", "caption": "Register 40080 - 40094 :: Voltages [V]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40080", "caption": "40080 - AC Voltage Phase-to-neutral Average" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40082", "caption": "40082 - AC Voltage Phase-A-to-neutral" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40084", "caption": "40084 - AC Voltage Phase-B-to-neutral" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40086", "caption": "40086 - AC Voltage Phase-C-to-neutral" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40088", "caption": "40088 - AC Voltage Phase-to-phase Average" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40090", "caption": "40090 - AC Voltage Phase-AB" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40092", "caption": "40092 - AC Voltage Phase-BC" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40094", "caption": "40094 - AC Voltage Phase-CA" }
+                    ]
+                }, 
+                { "type": "ExpansionPanel", "caption": "Register 40086 :: Frequence [Hz]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40096", "caption": "40096 - AC Frequency" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40098 :: 40104 Power [W]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40098", "caption": "40098 - AC Power" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40100", "caption": "40100 - AC Power Phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40102", "caption": "40102 - AC Power Phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40104", "caption": "40104 - AC Power Phase C" }
+                    ]
+                },                                 
+                { "type": "ExpansionPanel", "caption": "Register 40106 - 40112 :: Apparent Power [VA]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40106", "caption": "40106 - AC Apparent Power" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40108", "caption": "40108 - AC Apparent Power Phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40110", "caption": "40110 - AC Apparent Power Phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40112", "caption": "40112 - AC Apparent Power Phase C" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40114 - 40120 :: Reactive Power [VAr]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40114", "caption": "40114 - AC Reactive Power" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40116", "caption": "40116 - AC Reactive Power Phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40118", "caption": "40118 - AC Reactive Power Phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40120", "caption": "40120 - AC Reactive Power Phase C" }
+                    ]
+                },  
+                { "type": "ExpansionPanel", "caption": "Register 40122 - 40128 :: Power Factor [cosPhi]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40122", "caption": "40122 - Power Factor" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40124", "caption": "40124 - Power Factor Phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40126", "caption": "40126 - Power Factor Phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40128", "caption": "40128 - Power Factor Phase C" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40130 - 40136 :: Watt-hours Exported [Wh]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40130", "caption": "40130 - Total Watt-hours Exported" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40132", "caption": "40132 - Total Watt-hours Exported phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40134", "caption": "40134 - Total Watt-hours Exported phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40136", "caption": "40136 - Total Watt-hours Exported phase C" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40146 - 40152 :: VA-hours Imported [Wh]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40138", "caption": "40138 - Total Watt-hours Imported" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40140", "caption": "40140 - Total Watt-hours Imported phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40142", "caption": "40142 - Total Watt-hours Imported phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40144", "caption": "40144 - Total Watt-hours Imported phase C" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40146 - 40452 :: VA-hours Exported  [VAh]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40146", "caption": "40146 - Total VA-hours Exported" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40148", "caption": "40148 - Total VA-hours Exported phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40150", "caption": "40150 - Total VA-hours Exported phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40152", "caption": "40152 - Total VA-hours Exported phase C" }
+                    ]
+                },   
+                { "type": "ExpansionPanel", "caption": "Register 40154 - 40160 :: VA-hours Imported [VAh]", "expanded": false, "visible": true, 
+                "items": [
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40154", "caption": "40154 - Total VA-hours Imported" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40156", "caption": "40156 - Total VA-hours Imported phase A" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40158", "caption": "40158 - Total VA-hours Imported phase B" },
+                    { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40160", "caption": "40160 - Total VA-hours Imported phase C" }
+                    ]
+                }
+            ]
         }
 
-
-    ],
+     ],
     "actions": [
         {
             "type": "ExpansionPanel",
@@ -107,7 +192,7 @@
                     "caption": "Reset Counter Variables",
                     "onClick": "SSMS_ResetCounterVariables($id, 'ModulForm');"
                 },
-                     {
+                {
                     "type": "Button",
                     "caption": "Get 'Profiling Data'",
                     "onClick": "SSMS_GetProfilingDataAsText($id, 'ModulForm');"

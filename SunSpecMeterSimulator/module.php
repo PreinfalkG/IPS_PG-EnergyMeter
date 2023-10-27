@@ -3,12 +3,14 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/MeterFkt.php'; 
+require_once __DIR__ . '/SunSpec.php'; 
 require_once __DIR__ . '/../libs/COMMON.php'; 
 
 
 	class SunSpecMeterSimulator extends IPSModule
 	{
 
+		use SUN_SPEC;
 		use METER_FUNCTIONS;
 		use ENERGYMETER_COMMON;
 
@@ -19,6 +21,8 @@ require_once __DIR__ . '/../libs/COMMON.php';
 		private $rootId;
 		private $parentRootId;
 		private $archivInstanzID;
+
+		private $meterValueSource = -1;			// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
 
 
 		public function __construct($InstanceID) {
@@ -34,6 +38,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 				$currentStatus = $this->GetStatus();
 				if($currentStatus == 102) {				//Instanz ist aktiv
 					$this->logLevel = $this->ReadPropertyInteger("LogLevel");
+					$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
 					if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Log-Level is %d", $this->logLevel), 0); }
 				} else {
 					if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Current Status is '%s'", $currentStatus), 0); }	
@@ -76,11 +81,54 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			$this->RegisterPropertyInteger("MeterModbusAddress", 107);	
 			$this->RegisterPropertyInteger("MeterSunSpecModel", 213);	
 
+			//$this->RegisterPropertyBoolean("cbLinkToVariables", false);
+			$this->RegisterPropertyInteger("selMeterDataSource", 0);
 
-			$this->RegisterPropertyInteger('40098_W', 0);
-			$this->RegisterPropertyInteger('40100_WphA', 0);
-			$this->RegisterPropertyInteger('40102_WphB', 0);
-			$this->RegisterPropertyInteger('40104_WphC', 0);
+			$this->RegisterPropertyInteger("40072", 0);
+			$this->RegisterPropertyInteger("40074", 0);
+			$this->RegisterPropertyInteger("40076", 0);
+			$this->RegisterPropertyInteger("40078", 0);
+			$this->RegisterPropertyInteger("40080", 0);
+			$this->RegisterPropertyInteger("40082", 0);
+			$this->RegisterPropertyInteger("40084", 0);
+			$this->RegisterPropertyInteger("40086", 0);
+			$this->RegisterPropertyInteger("40088", 0);
+			$this->RegisterPropertyInteger("40090", 0);
+			$this->RegisterPropertyInteger("40092", 0);
+			$this->RegisterPropertyInteger("40094", 0);
+			$this->RegisterPropertyInteger("40096", 0);
+			$this->RegisterPropertyInteger("40098", 0);
+			$this->RegisterPropertyInteger("40100", 0);
+			$this->RegisterPropertyInteger("40102", 0);
+			$this->RegisterPropertyInteger("40104", 0);
+			$this->RegisterPropertyInteger("40106", 0);
+			$this->RegisterPropertyInteger("40108", 0);
+			$this->RegisterPropertyInteger("40110", 0);
+			$this->RegisterPropertyInteger("40112", 0);
+			$this->RegisterPropertyInteger("40114", 0);
+			$this->RegisterPropertyInteger("40116", 0);
+			$this->RegisterPropertyInteger("40118", 0);
+			$this->RegisterPropertyInteger("40120", 0);
+			$this->RegisterPropertyInteger("40122", 0);
+			$this->RegisterPropertyInteger("40124", 0);
+			$this->RegisterPropertyInteger("40126", 0);
+			$this->RegisterPropertyInteger("40128", 0);
+			$this->RegisterPropertyInteger("40130", 0);
+			$this->RegisterPropertyInteger("40132", 0);
+			$this->RegisterPropertyInteger("40134", 0);
+			$this->RegisterPropertyInteger("40136", 0);
+			$this->RegisterPropertyInteger("40138", 0);
+			$this->RegisterPropertyInteger("40140", 0);
+			$this->RegisterPropertyInteger("40142", 0);
+			$this->RegisterPropertyInteger("40144", 0);
+			$this->RegisterPropertyInteger("40146", 0);
+			$this->RegisterPropertyInteger("40148", 0);
+			$this->RegisterPropertyInteger("40150", 0);
+			$this->RegisterPropertyInteger("40152", 0);
+			$this->RegisterPropertyInteger("40154", 0);
+			$this->RegisterPropertyInteger("40156", 0);
+			$this->RegisterPropertyInteger("40158", 0);
+			$this->RegisterPropertyInteger("40160", 0);
 
 
 			//Register Attributes for simple profiling
@@ -122,9 +170,8 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			$meterModbusAddress = $this->ReadPropertyInteger("MeterModbusAddress");	
 			$meterSunSpecModel = $this->ReadPropertyInteger("MeterSunSpecModel");	
 
-
+		
 			//IPS_SETPROPERTY
-
 
 			$connectionState = -1;
 			$conID = IPS_GetInstance($this->InstanceID)['ConnectionID'];
@@ -184,7 +231,6 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 			}
 		}
-
 
 
 		public function Send(string $Text, string $ClientIP, int $ClientPort) {
@@ -251,6 +297,35 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 			IPS_ApplyChanges($this->archivInstanzID);
 			if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, "Variables registered", 0); }
+
+		}
+
+
+		public function GetConfigurationForm() {
+			// wird beim Laden der Instanz-Konfig-Seite aufgerufen
+			// Form.json auslesen und CheckBox für Zustand der Instanz setzen
+			$Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+			if($this->ReadPropertyInteger("selMeterDataSource") == 1) {
+				$Form['elements']["5"]['visible'] = true; 
+				$Form['elements']["5"]['expanded'] = true;
+			} else {
+				$Form['elements']["5"]['visible'] = false;
+				$Form['elements']["5"]['expanded'] = false;
+			}
+			return json_encode($Form);
+		}
+
+		public function OnChange_selMeterDataSource(string $caller='?') {
+
+			if($this->ReadPropertyInteger("selMeterDataSource") == 1) {
+				$this->UpdateFormField("selMeterDataSource", "visible", true);
+				if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, "xxx_true", 0); }
+			} else {
+				$this->UpdateFormField("selMeterDataSource", "visible", false);
+				if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, "xxxx_false", 0); }
+			}
+
+       	//Line from form.json { "name": "cbLinkToVariables", "type": "CheckBox", "caption": "Use linked Variables", "enabled": true, "value": false, "onChange": "SSMS_OnChange_cbLinkToVariables($id, 'ModulForm');" },
 
 		}
 

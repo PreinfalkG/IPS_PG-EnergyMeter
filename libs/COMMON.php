@@ -1,5 +1,7 @@
 <?
 
+declare(strict_types=1);
+
 abstract class LogLevel {
     const ALL = 9;
     const TEST = 8;
