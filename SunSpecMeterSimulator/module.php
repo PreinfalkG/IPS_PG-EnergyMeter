@@ -29,7 +29,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			parent::__construct($InstanceID);		// Diese Zeile nicht löschen
 		
 
-			if (interface_exists("GetStatus", false) {
+			if (interface_exists("GetStatus", false)) {
 				IPS_LogMessage(__CLASS__."_".__FUNCTION__, "interface_exists  JA");
 			} else {
 				IPS_LogMessage(__CLASS__."_".__FUNCTION__, "interface_exists  NEIN");
