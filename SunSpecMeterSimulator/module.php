@@ -23,36 +23,25 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 		private $meterValueSource = -1;			// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
 
-		
+
 
 		public function __construct($InstanceID) {
 		
 			parent::__construct($InstanceID);		// Diese Zeile nicht löschen
 		
+			$this->rootId = $InstanceID;
+			$this->parentRootId = IPS_GetParent($InstanceID);
+			$this->archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
 
-			if (interface_exists("GetStatus", false)) {
-				IPS_LogMessage(__CLASS__."_".__FUNCTION__, "interface_exists  JA");
+			$currentStatus = @$this->GetStatus();
+			if($currentStatus == 102) {				//Instanz ist aktiv
+				$this->logLevel = $this->ReadPropertyInteger("LogLevel");
+				$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
+				if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Log-Level is %d", $this->logLevel), 0); }
 			} else {
-				IPS_LogMessage(__CLASS__."_".__FUNCTION__, "interface_exists  NEIN");
-			}
+				if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Current Status is '%s'", $currentStatus), 0); }	
+			}			
 
-
-			if(is_null($InstanceID)) {
-				IPS_LogMessage(__CLASS__."_".__FUNCTION__, "WARN: InstanceID is NULL");
-			} else {
-				$this->rootId = $InstanceID;
-				$this->parentRootId = IPS_GetParent($InstanceID);
-				$this->archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
-
-				$currentStatus = @$this->GetStatus();
-				if($currentStatus == 102) {				//Instanz ist aktiv
-					$this->logLevel = $this->ReadPropertyInteger("LogLevel");
-					$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
-					if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Log-Level is %d", $this->logLevel), 0); }
-				} else {
-					if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Current Status is '%s'", $currentStatus), 0); }	
-				}			
-			}
 		}
 
 
