@@ -7,8 +7,7 @@ require_once __DIR__ . '/SunSpec.php';
 require_once __DIR__ . '/../libs/COMMON.php'; 
 
 
-	class SunSpecMeterSimulator extends IPSModule
-	{
+	class SunSpecMeterSimulator extends IPSModule {
 
 		use SUN_SPEC;
 		use METER_FUNCTIONS;
