@@ -35,7 +35,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 				$this->parentRootId = IPS_GetParent($InstanceID);
 				$this->archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
 
-				$currentStatus = $this->GetStatus();
+				$currentStatus = @$this->GetStatus();
 				if($currentStatus == 102) {				//Instanz ist aktiv
 					$this->logLevel = $this->ReadPropertyInteger("LogLevel");
 					$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
