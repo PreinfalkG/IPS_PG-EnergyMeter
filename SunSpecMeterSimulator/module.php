@@ -326,9 +326,8 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			//$this->SendDebug("[" . __CLASS__ . "] - " . $name, $daten, $format); 	
 	
 			$this->logCnt++;
-			$logsender = sprintf("#%02d {%d} [%s] - %s", $this->logCnt, $_IPS['THREAD'], __CLASS__, $name);
+			$logsender = sprintf("#%02d {%02d} [%s] - %s", $this->logCnt, $_IPS['THREAD'], __CLASS__, $name);
 			$this->SendDebug($logsender, $daten, $format); 	
-
 
 			if($this->enableIPSLogOutput) {
 				if($format == 0) {
@@ -338,7 +337,5 @@ require_once __DIR__ . '/../libs/COMMON.php';
 				}
 			}
 		}
-
-
 
 	}
