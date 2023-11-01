@@ -262,7 +262,7 @@ class SunSpecMeterSimulator extends IPSModule {
 		$this->RegisterVariableInteger("modbusTransmitCnt", "Modbus Transmit Cnt", "", 910);
 
 		$archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
-		IPS_ApplyChanges($this->archivInstanzID);
+		IPS_ApplyChanges($archivInstanzID);
 		if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, "Variables registered", 0); }
 
 	}
