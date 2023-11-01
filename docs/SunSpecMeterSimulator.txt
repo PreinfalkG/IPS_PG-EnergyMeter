@@ -1,5 +1,5 @@
 
-IPS_PG EnergyMeter
+EnergyMeter Simulator
 GUID: {780FF3EC-7469-B14F-D662-E77E2B00A757}
 
 

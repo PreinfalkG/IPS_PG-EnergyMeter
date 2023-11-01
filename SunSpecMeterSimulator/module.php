@@ -20,20 +20,18 @@ class SunSpecMeterSimulator extends IPSModule {
 	private $enableIPSLogOutput = false;
 	private $rootId;
 	private $parentRootId;
-	private $archivInstanzID;
 
-	private $meterValueSource = -1;			// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
+	private $meterValueSource = -1;						// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
 
 
 	public function __construct($InstanceID) {
 	
-		parent::__construct($InstanceID);		// Diese Zeile nicht löschen
+		parent::__construct($InstanceID);				// Diese Zeile nicht löschen
 	
 		$this->rootId = $InstanceID;
-		$this->archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
 
 		$currentStatus = @$this->GetStatus();
-		if($currentStatus == 102) {				//Instanz ist aktiv
+		if($currentStatus == 102) {						//Instanz ist aktiv
 			$this->parentRootId = IPS_GetParent($InstanceID);
 			$this->logLevel = $this->ReadPropertyInteger("LogLevel");
 			$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
@@ -41,7 +39,6 @@ class SunSpecMeterSimulator extends IPSModule {
 		} else {
 			if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Current Status is '%s'", $currentStatus), 0); }	
 		}			
-
 	}
 
 
@@ -155,7 +152,6 @@ class SunSpecMeterSimulator extends IPSModule {
 		$this->logLevel = $this->ReadPropertyInteger("LogLevel");
 		if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Set Log-Level to %d", $this->logLevel), 0); }
 		
-
 		$this->RegisterProfiles();
 		$this->RegisterVariables();  
 
@@ -265,6 +261,7 @@ class SunSpecMeterSimulator extends IPSModule {
 		$this->RegisterVariableInteger("modbusReceiveLast", "Modbus Last Receive", "~UnixTimestamp", 901);
 		$this->RegisterVariableInteger("modbusTransmitCnt", "Modbus Transmit Cnt", "", 910);
 
+		$archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
 		IPS_ApplyChanges($this->archivInstanzID);
 		if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, "Variables registered", 0); }
 

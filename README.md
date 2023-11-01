@@ -1,6 +1,6 @@
-# IPS_PG EnergyMeter
+# EnergyMeter Simulator
 
-Folgende Module beinhaltet das IPS_PG EnergyMeter Repository:
+Folgende Module beinhaltet das EnergyMeter Simulator Repository:
 
 - __SunSpecMeterSimulator__ ([Dokumentation](SunSpecMeterSimulator))  
 	Simuliert z.B. einen Fronius Smart Meter IP
