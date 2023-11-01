@@ -16,13 +16,13 @@ require_once __DIR__ . '/../libs/COMMON.php';
 		//const PROF_NAMES = ["FetchLogInForm", "submitEmailAddressForm", "submitPasswordForm", "fetchInitialAccessTokens", "fetchRefreshedAccessTokens", "FetchUserInfo", "FetchVehiclesAndEnrollmentStatus", "FetchVehicleData"];
 
 		private $logLevel = 3;
+		private $logCnt = 0;
 		private $enableIPSLogOutput = false;
 		private $rootId;
 		private $parentRootId;
 		private $archivInstanzID;
 
 		private $meterValueSource = -1;			// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
-
 
 
 		public function __construct($InstanceID) {
@@ -188,8 +188,8 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 		public function MessageSink($TimeStamp, $SenderID, $Message, $Data)	{
 			$logMsg = sprintf("TimeStamp: %s | SenderID: %s | Message: %s | Data: %s", $TimeStamp, $SenderID, $Message, json_encode($Data));
-			if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, $logMsg, 0); }
-			IPS_LogMessage(__CLASS__."_".__FUNCTION__, $logMsg);
+			if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__, $logMsg, 0); }
+			//IPS_LogMessage(__CLASS__."_".__FUNCTION__, $logMsg);
 		}
 
 
@@ -322,8 +322,14 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 
 		protected function AddLog($name, $daten, $format) {
-			$this->SendDebug("[" . __CLASS__ . "] - " . $name, $daten, $format); 	
+			
+			//$this->SendDebug("[" . __CLASS__ . "] - " . $name, $daten, $format); 	
 	
+			$this->logCnt++;
+			$logsender = sprintf("#%02d {%d} [%s] - %s", $this->logCnt, $_IPS['THREAD'], __CLASS__, $name);
+			$this->SendDebug($logsender, $daten, $format); 	
+
+
 			if($this->enableIPSLogOutput) {
 				if($format == 0) {
 					IPS_LogMessage(__CLASS__."-" . $name, $daten);	
