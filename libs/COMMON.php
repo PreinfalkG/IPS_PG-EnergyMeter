@@ -196,6 +196,23 @@ trait ENERGYMETER_COMMON {
         return $value;
     }
 
+
+    function implode_recursive(string $separator, array $array): string {
+        $string = '';
+        foreach ($array as $i => $a) {
+            if (is_array($a)) {
+                $string .= implode_recursive($separator, $a);
+            } else {
+                $string .= $a;
+                if ($i < count($array) - 1) {
+                    $string .= $separator;
+                }
+            }
+        }
+        return $string;
+    }
+
+
     protected function CalcDuration_ms(float $timeStart) {
         $duration =  microtime(true) - $timeStart;
         return round($duration*1000,2);
