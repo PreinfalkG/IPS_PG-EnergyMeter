@@ -30,11 +30,11 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			parent::__construct($InstanceID);		// Diese Zeile nicht löschen
 		
 			$this->rootId = $InstanceID;
-			$this->parentRootId = IPS_GetParent($InstanceID);
 			$this->archivInstanzID = IPS_GetInstanceListByModuleID("{43192F0B-135B-4CE7-A0A7-1475603F3060}")[0];
 
 			$currentStatus = @$this->GetStatus();
 			if($currentStatus == 102) {				//Instanz ist aktiv
+				$this->parentRootId = IPS_GetParent($InstanceID);
 				$this->logLevel = $this->ReadPropertyInteger("LogLevel");
 				$this->meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");
 				if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Log-Level is %d", $this->logLevel), 0); }
@@ -155,11 +155,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			$this->logLevel = $this->ReadPropertyInteger("LogLevel");
 			if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Set Log-Level to %d", $this->logLevel), 0); }
 			
-			if (IPS_GetKernelRunlevel() != KR_READY) {
-				if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("GetKernelRunlevel is '%s'", IPS_GetKernelRunlevel()), 0); }
-				//return;
-			}
-
+	
 			$this->RegisterProfiles();
 			$this->RegisterVariables();  
 
@@ -167,23 +163,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			$meterModbusAddress = $this->ReadPropertyInteger("MeterModbusAddress");	
 			$meterSunSpecModel = $this->ReadPropertyInteger("MeterSunSpecModel");	
 
-		
-			//IPS_SETPROPERTY
-
-			$connectionState = -1;
-			$conID = IPS_GetInstance($this->InstanceID)['ConnectionID'];
-			if($conID > 0) {
-				$connectionState = IPS_GetInstance($conID)['InstanceStatus'];
-				//$instanzArr = IPS_GetInstance($conID);
-				//$this->AddLog(__FUNCTION__, print_r($instanzArr, true), 0);
-				if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Instanz '%s [%s]' has I/O Gateway '%s [%s]' in State %s", $this->InstanceID, IPS_GetName($this->InstanceID), $conID, IPS_GetName($conID),  $connectionState), 0); }
-
-			} else {
-				$connectionState = 0;
-				if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Instanz '%s [%s]' has NO Gateway/Connection [ConnectionID=%s]", $this->InstanceID, IPS_GetName($this->InstanceID), $conID), 0); }
-			}
-
-
+			$this->GetConnectionState();
 		}
 
 		public function MessageSink($TimeStamp, $SenderID, $Message, $Data)	{
@@ -198,11 +178,11 @@ require_once __DIR__ . '/../libs/COMMON.php';
 			$conID = IPS_GetInstance($this->InstanceID)['ConnectionID'];
 			if($conID > 0) {
 				$connectionState = IPS_GetInstance($conID)['InstanceStatus'];
+				if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Instanz '%s [%s]' has I/O Gateway '%s [%s]' in State %s", $this->InstanceID, IPS_GetName($this->InstanceID), $conID, IPS_GetName($conID),  $connectionState), 0); }
 			} else {
 				$connectionState = 0;
 				if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("Instanz '%s [%s]' has NO Gateway/Connection [ConnectionID=%s]", $this->InstanceID, IPS_GetName($this->InstanceID), $conID), 0); }
 			}
-			SetValue($this->GetIDForIdent("connectionState"), $connectionState);
 			return $connectionState;
 		}
 
@@ -219,7 +199,6 @@ require_once __DIR__ . '/../libs/COMMON.php';
 				if(str_starts_with($objIdent, "Cnt_")) {
 					SetValueInteger($childId, 0);
 				}
-
 			}
 		}
 
@@ -322,11 +301,10 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 
 		protected function AddLog($name, $daten, $format) {
-			
 			//$this->SendDebug("[" . __CLASS__ . "] - " . $name, $daten, $format); 	
 	
 			$this->logCnt++;
-			$logsender = sprintf("#%02d {%02d} [%s] - %s", $this->logCnt, $_IPS['THREAD'], __CLASS__, $name);
+			$logsender = sprintf("#%02d {%2d} [%s] - %s", $this->logCnt, $_IPS['THREAD'], __CLASS__, $name);
 			$this->SendDebug($logsender, $daten, $format); 	
 
 			if($this->enableIPSLogOutput) {
