@@ -23,6 +23,7 @@ require_once __DIR__ . '/../libs/COMMON.php';
 
 		private $meterValueSource = -1;			// 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
 
+		
 
 		public function __construct($InstanceID) {
 		
