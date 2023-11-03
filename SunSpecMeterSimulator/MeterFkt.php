@@ -9,7 +9,7 @@ trait METER_FUNCTIONS {
     private function ProcessData(string $receivedData): string {
         
         $responceData = "";
-
+        $meterValueSource = $this->ReadPropertyInteger("selMeterDataSource");           // 0 = all Values '0.0' | 1 = link to Variables | 2 = Update Function | 3 = Sample Values | -1 = nod defined
         $len = strlen($receivedData);
     
         if($len < 12 ) {
@@ -23,14 +23,14 @@ trait METER_FUNCTIONS {
 
             $modbusAdress = ord($modbusTCP_Part3_UI);
             if($modbusAdress != $this->ReadPropertyInteger("MeterModbusAddress")) {
-                if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__, sprintf("Modbus Adress does not match [%d <> %d]", $modbusAdress, $this->ReadPropertyInteger("MeterModbusAddress")), 0); }
+                if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__, sprintf("Modbus Adress does not match [%d <> %d]", $modbusAdress, $this->ReadPropertyInteger("MeterModbusAddress"))); }
             } else {
    
-                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ReceivedData Len:  %d", $len), 0); }
-                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part1_TIPI: %s", $this->String2Hex($modbusTCP_Part1_TIPI)), 0); }
-                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part2_Len: %s", $this->String2Hex($modbusTCP_Part2_Len)), 0); }
-                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part3_UI: %s", $this->String2Hex($modbusTCP_Part3_UI)), 0); }
-                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Part_modbusData: %s", $this->String2Hex($modbusData)), 0); }
+                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ReceivedData Len:  %d", $len)); }
+                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part1_TIPI: %s", $this->String2Hex($modbusTCP_Part1_TIPI))); }
+                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part2_Len: %s", $this->String2Hex($modbusTCP_Part2_Len))); }
+                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("ModbusTCP_Part3_UI: %s", $this->String2Hex($modbusTCP_Part3_UI))); }
+                if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("Part_modbusData: %s", $this->String2Hex($modbusData))); }
 
                 switch($modbusData) {
         
@@ -38,7 +38,7 @@ trait METER_FUNCTIONS {
                         //$recordedResponse = "\x03\x74\x3c\x13\x74\xbc\x3f\x21\xd3\x75\x3d\xdc\xbc\x6a\x3e\x3f\xe3\x54\x43\x65\x23\x6d\x43\x64\xd7\xbd\x43\x65\x4a\xb3\x43\x65\x47\xd7\x43\xc6\x70\x83\x43\xc6\x93\xe4\x43\xc6\x77\xb2\x43\xc6\x45\xf3\x42\x48\x0a\x3d\x41\xfe\x20\x00\x41\x95\x50\x00\x41\x15\x10\x00\x40\x72\x80\x00\x43\x54\x68\x00\x43\x10\xb6\x00\x41\xc5\xc8\x00\x42\x2b\xec\x00\xc3\x47\x78\x00\xc3\x0a\x6b\x00\xc1\x9e\x30\x00\xc2\x25\x28\x00\x3e\x18\x93\x75\x3e\x04\x18\x93\x3e\xc1\x06\x25\x3d\xb6\x45\xa2";
                         $responceData = $modbusTCP_Part1_TIPI . "\x00\x77". $modbusTCP_Part3_UI;
                         $responceData .= "\x03\x74";                                                                            // Function Code: 3 |  Byte Count: 116 (0x74)  
-                        $dataArr = $this->GetRegisterData_40072_40129($this->meterValueSource);                                 // Register Values 40072 bis 40129 (A, V, Hz, W, VA, VAr, cos) 
+                        $dataArr = $this->GetRegisterData_40072_40129($meterValueSource);                                 // Register Values 40072 bis 40129 (A, V, Hz, W, VA, VAr, cos) 
                         $responceData .= pack("G*", ...$dataArr);                                                               // Pack as float32
                         $this->IncreaseCnt("Cnt_40072");
                         break;
@@ -47,7 +47,7 @@ trait METER_FUNCTIONS {
                         //$recordedResponse = "\x03\x40\x48\xc2\x85\x2b\x48\x2e\x94\xa4\x47\xea\x33\x54\x47\xd5\x11\xcc\x4a\x0f\x02\x8c\x49\x32\x18\xce\x48\x5b\x9f\xfe\x49\x9e\x72\x1a\x48\xdf\xa2\xff\x48\x3c\x5e\xfa\x47\xf0\xe1\xec\x47\xf5\x02\x84\x4a\xb6\xf2\x2a\x49\xd7\x62\xa7\x49\x19\xbd\x98\x4a\x5b\xc3\x8d";
                         $responceData = $modbusTCP_Part1_TIPI . "\x00\x43". $modbusTCP_Part3_UI;                                    
                         $responceData .= "\x03\x40";                                                                            // Function Code: 3 |  Byte Count: 64 (0x40)  
-                        $dataArr = $this->GetRegisterData_40130_40161($this->meterValueSource);                                 // Register Values 40130 bis 40161 (Energy Data Wh, VAh)
+                        $dataArr = $this->GetRegisterData_40130_40161($meterValueSource);                                 // Register Values 40130 bis 40161 (Energy Data Wh, VAh)
                         $responceData .= pack("G*", ...$dataArr);                                                               // Pack as float32
                         $this->IncreaseCnt("Cnt_40130");
                         break;
@@ -96,13 +96,13 @@ trait METER_FUNCTIONS {
                         $meterSunSpecModel = $this->ReadPropertyInteger("MeterSunSpecModel");
                         if($meterSunSpecModel == 211) {
                             $responceData .= "\x00\xd3";                                                                        // Register 40070=211: single phase
-                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'single phase' meter [meter model: %d]", $meterSunSpecModel), 0); }
+                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'single phase' meter [meter model: %d]", $meterSunSpecModel)); }
                         } else if ($meterSunSpecModel == 212) {
                             $responceData .= "\x00\xd4";                                                                        // Register 40070=212: split phase
-                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'split phase' meter [meter model: %d]", $meterSunSpecModel), 0); }
+                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'split phase' meter [meter model: %d]", $meterSunSpecModel)); }
                         } else {
                             $responceData .= "\x00\xd5";                                                                        // Register 40070=213: three phase
-                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'three phase' meter [meter model: %d]", $meterSunSpecModel), 0); }
+                            if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Simulate 'three phase' meter [meter model: %d]", $meterSunSpecModel)); }
                         }
                                                 
                         $responceData .= "\x00\x7c";                                                                            // Register 40071=124           - Length of inverter model block
@@ -140,7 +140,7 @@ trait METER_FUNCTIONS {
                         break;
                     default:
                         $this->IncreaseCnt("Cnt_untreated");
-                        if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__,  sprintf("WARN: untreated Modbus Request [%s]", $this->String2Hex($receivedData)), 0); }
+                        if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__,  sprintf("WARN: untreated Modbus Request [%s]", $this->String2Hex($receivedData))); }
                         break;
                 }
             }
@@ -229,7 +229,7 @@ trait METER_FUNCTIONS {
             }  
         }
 
-        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  "RegisterData 40072 - 40129 filled", 0); }
+        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  "RegisterData 40072 - 40129 filled"); }
         return $registerDataArr;  
     }
     
@@ -300,7 +300,7 @@ trait METER_FUNCTIONS {
             }  
         }
 
-        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  "RegisterData 40130 - 40161 filled", 0); }            
+        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  "RegisterData 40130 - 40161 filled"); }            
         return $registerDataArr;      
     }
     
@@ -311,7 +311,7 @@ trait METER_FUNCTIONS {
         if($varIdConfigured > 1) {
             $meterValue = GetValue($varIdConfigured);
         }
-        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  sprintf(" %s = %f", $propertyName, $meterValue), 0); }  
+        if($this->logLevel >= LogLevel::DEBUG) { $this->AddLog(__FUNCTION__,  sprintf(" %s = %f", $propertyName, $meterValue)); }  
         return $meterValue;
     }
 
