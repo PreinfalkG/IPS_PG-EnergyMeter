@@ -181,9 +181,15 @@ class SunSpecMeterSimulator extends IPSModule {
 		$childrenIds = IPS_GetChildrenIDs($this->rootId);
 		foreach($childrenIds as $childId) {
 			$objIdent = IPS_GetObject($childId)["ObjectIdent"];
-			if(str_starts_with($objIdent, "Cnt_")) {
+			
+			//if(str_starts_with($objIdent, "Cnt_")) {
+			//	SetValueInteger($childId, 0);
+			//}
+
+			if($this->startsWith($objIdent, "Cnt_")) {
 				SetValueInteger($childId, 0);
 			}
+
 		}
 	}
 
@@ -284,6 +290,10 @@ class SunSpecMeterSimulator extends IPSModule {
 		//Line from form.json { "name": "cbLinkToVariables", "type": "CheckBox", "caption": "Use linked Variables", "enabled": true, "value": false, "onChange": "SSMS_OnChange_cbLinkToVariables($id, 'ModulForm');" },
 	}
 
+
+	protected function startsWith(string $haystack, string $needle) {
+		return strpos($haystack, $needle) === 0;
+	}
 
 	protected function AddLog($name, $daten, $format=0) {
 		$this->logCnt++;
