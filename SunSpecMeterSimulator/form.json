@@ -152,7 +152,7 @@
                     { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40136", "caption": "40136 - Total Watt-hours Exported phase C" }
                     ]
                 },   
-                { "type": "ExpansionPanel", "caption": "Register 40146 - 40152 :: VA-hours Imported [Wh]", "expanded": false, "visible": true, 
+                { "type": "ExpansionPanel", "caption": "Register 40146 - 40152 :: Watt-hours Imported [Wh]", "expanded": false, "visible": true, 
                 "items": [
                     { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40138", "caption": "40138 - Total Watt-hours Imported" },
                     { "type": "SelectVariable", "validVariableTypes": [1, 2], "name": "40140", "caption": "40140 - Total Watt-hours Imported phase A" },
