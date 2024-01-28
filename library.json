@@ -1,12 +1,12 @@
 {
     "id": "{780FF3EC-7469-B14F-D662-E77E2B00A757}",
-    "name": "EnergyMeter Simulator",
+    "name": "EnergyMeter",
     "author": "PreinfalkG",
     "url": "",
     "compatibility": {
-        "version": "6.4"
+        "version": "7.0"
     },
-    "version": "0.94",
-    "build": 20231215,
+    "version": "0.95",
+    "build": 20240128,
     "date": 1702624671
 }

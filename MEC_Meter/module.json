@@ -1,0 +1,12 @@
+{
+    "id": "{BC138FCF-4869-B67D-A6AD-08808030A010}",
+    "name": "MECMeter",
+    "type": 3,
+    "vendor": "MEC electronics | VERBUND",
+    "aliases": ["Power Meter", "MEC-Meter"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "MECM",
+    "url": ""
+}

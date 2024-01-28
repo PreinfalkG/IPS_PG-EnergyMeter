@@ -1,0 +1,125 @@
+{
+    "elements": [
+        {
+            "type": "RowLayout",
+            "visible": true,
+            "items": [
+                {
+                    "type": "Label",
+                    "label": "MAC-Meter  "
+                },
+                {
+                    "type": "ValidationTextBox",
+                    "caption": "IP",
+                    "name": "MecMeter_IP"
+                }
+            ]
+        },
+        {
+            "name": "EnableAutoUpdate",
+            "type": "CheckBox",
+            "caption": "Auto Update"
+        },
+        {
+            "name": "AutoUpdateInterval",
+            "type": "NumberSpinner",
+            "caption": "Update Interval",
+            "suffix": "sec"
+        },
+        {
+            "name": "LogLevel",
+            "type": "Select",
+            "caption": "Debug/Log Level",
+            "options": [
+                {
+                    "label": "ALL",
+                    "value": 9
+                },
+                {
+                    "label": "TEST",
+                    "value": 8
+                },
+                {
+                    "label": "TRACE",
+                    "value": 7
+                },
+                {
+                    "label": "COMMUNICATION",
+                    "value": 6
+                },
+                {
+                    "label": "DEBUG",
+                    "value": 5
+                },
+                {
+                    "label": "INFO",
+                    "value": 4
+                },
+                {
+                    "label": "WARN",
+                    "value": 3
+                },
+                {
+                    "label": "ERROR",
+                    "value": 2
+                },
+                {
+                    "label": "FATAL",
+                    "value": 1
+                },
+                {
+                    "label": "OFF",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "type": "Label",
+            "label": " "
+        },
+        {
+            "type": "Label",
+            "label": "Request Data for:"
+        },
+        {
+            "type": "CheckBox",
+            "enabled": true,
+            "caption": "Data 1",
+            "name": "cb_Data1"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Data 2*",
+            "name": "cb_Data2"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Button",
+            "label": "Update ",
+            "onClick": "MECM_Update($id, 'ModulForm');"
+        },
+        {
+            "type": "Button",
+            "caption": "Reset Counter Variables",
+            "onClick": "MECM_ResetCntVariables($id, 'ModulForm');"
+        }
+    ],
+    "status": [
+        {
+            "code": 101,
+            "icon": "inactive",
+            "caption": "Enable AUTO Update"
+        },
+        {
+            "code": 102,
+            "icon": "active",
+            "caption": "Connection to MEC-Meter API has been established"
+        },
+        {
+            "code": 200,
+            "icon": "inactive",
+            "caption": "Error: Could not connect to MEC-Meter API"
+        }
+    ]
+}
