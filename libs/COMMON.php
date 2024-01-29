@@ -178,18 +178,22 @@ trait ENERGYMETER_COMMON {
             if (!empty($icon)) {
                 IPS_SetIcon($varId, $icon);
             }
+        }
 
-            if ($faktor != 1) {
-                $value = $value * $faktor;
+        if ($faktor != 1) {
+            $value = $value * $faktor;
+        }
+        if (!is_null($round)) {
+            $value = round($value, $round);
+        }
+        $result = SetValue($varId, $value);
+        if (!$result) {
+            if ($this->logLevel >= LogLevel::WARN) {
+                $this->AddLog(__FUNCTION__, sprintf("WARN :: Cannot set Value '%s' to Varible '%s' [parentId: %s | identName: %s | varId: %s | type: %s]", print_r($value, true), $varName, $parentId, $identName, $varId, gettype($value)));
             }
-            if (!is_null($round)) {
-                $value = round($value, $round);
-            }
-            $result = SetValue($varId, $value);
-            if (!$result) {
-                if ($this->logLevel >= LogLevel::WARN) {
-                    $this->AddLog(__FUNCTION__, sprintf("WARN :: Cannot set Value '%s' to Varible '%s' [parentId: %s | identName: %s | varId: %s | type: %s]", print_r($value), $varName, $parentId, $identName, $varId, gettype($value)));
-                }
+        } else {
+            if ($this->logLevel >= LogLevel::TEST) {
+                $this->AddLog(__FUNCTION__, sprintf("Set Value '%s' to Varible '%s' [parentId: %s | identName: %s | varId: %s | type: %s]", print_r($value, true), $varName, $parentId, $identName, $varId, gettype($value)));
             }
         }
 
@@ -285,7 +289,7 @@ trait ENERGYMETER_COMMON {
             }
             $result = SetValue($varId, $value);  
             if(!$result) {
-                if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("WARN :: Cannot save Variable '%s' with value '%s' [parentId: %s | varIdent: %s | varId: %s | type: %s]", $varName, print_r($value), $parentId, $varIdent, $varId, gettype($value))); }	
+                if($this->logLevel >= LogLevel::WARN) { $this->AddLog(__FUNCTION__, sprintf("WARN :: Cannot save Variable '%s' with value '%s' [parentId: %s | varIdent: %s | varId: %s | type: %s]", $varName, print_r($value, true), $parentId, $varIdent, $varId, gettype($value))); }	
             }
         }
         return $value;

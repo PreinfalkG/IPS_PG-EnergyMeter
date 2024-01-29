@@ -15,6 +15,19 @@
                 }
             ]
         },
+
+        {
+            "type": "ValidationTextBox",
+            "caption": "User",
+            "name": "MecMeter_User"
+        },
+
+        {
+            "type": "ValidationTextBox",
+            "caption": "Password",
+            "name": "MecMeter_PW"
+        },
+
         {
             "name": "EnableAutoUpdate",
             "type": "CheckBox",
@@ -84,21 +97,104 @@
         {
             "type": "CheckBox",
             "enabled": true,
-            "caption": "Data 1",
-            "name": "cb_Data1"
+            "caption": "Basic Infos",
+            "name": "cb_Basic"
         },
         {
             "type": "CheckBox",
-            "caption": "Data 2*",
-            "name": "cb_Data2"
+            "caption": "AC-Spannung",
+            "name": "cb_Vx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "AC-Strom",
+            "name": "cb_Ix"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "DC-Strom",
+            "name": "cb_DcI"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Wirkleistung",
+            "name": "cb_Px"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Wirkenergie Bezug",
+            "name": "cb_EFAx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Wirkenergie Einspeisung",
+            "name": "cb_ERAx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Blindenergie Bezug",
+            "name": "cb_EFRx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Blindleistung Bezug",
+            "name": "cb_Qx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Scheinenergie Bezug",
+            "name": "cb_ESx"
+        }        ,
+        {
+            "type": "CheckBox",
+            "caption": "Scheinleistung Bezug",
+            "name": "cb_Sx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Blindenergie Einspeisung",
+            "name": "cb_ERRx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Leistungsfaktor",
+            "name": "cb_PFx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Phasenwinkel",
+            "name": "cb_xAx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Fundamental & Harmonic",
+            "name": "cb_F_H"
+        },        
+        {
+            "type": "CheckBox",
+            "caption": "Advanced",
+            "name": "cb_Adv"
+        },        
+        {
+            "type": "CheckBox",
+            "caption": "Sonstige",
+            "name": "cb_other"
         }
+
+
+        
     ],
     "actions": [
         {
             "type": "Button",
-            "label": "Update ",
+            "label": "Update",
             "onClick": "MECM_Update($id, 'ModulForm');"
         },
+        {
+            "type": "Button",
+            "label": "Check Config Entries",
+            "onClick": "MECM_CheckConfig($id, 'ModulForm');"
+        },        
         {
             "type": "Button",
             "caption": "Reset Counter Variables",
