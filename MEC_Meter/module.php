@@ -48,7 +48,7 @@ class MECMeter extends IPSModule {
 
 		$this->RegisterPropertyBoolean('EnableAutoUpdate', false);
 		$this->RegisterPropertyInteger('AutoUpdateInterval', 15);
-		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.160");
+		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.122");
 		$this->RegisterPropertyString('MecMeter_User', "admin");
 		$this->RegisterPropertyString('MecMeter_PW', "");
 		$this->RegisterPropertyInteger('LogLevel', 3);
@@ -149,7 +149,7 @@ class MECMeter extends IPSModule {
 		$meterDataArr = $this->RequestMeterData();
 		if ($meterDataArr !== false) {
 
-			$cnt;
+			$cnt = 0;
 			foreach (SELF::MECM_CONIG_ARR as $key => $configArr) {
 				if ($configArr[CONFIG::ENABLED]) {
 					$groupIdent = $configArr[CONFIG::GROUPIDENT];
@@ -175,8 +175,8 @@ class MECMeter extends IPSModule {
 						}
 					}
 				}
-				$this->Increase_CounterVariable($this->GetIDForIdent("updateCntOk"));
 			}
+			$this->Increase_CounterVariable($this->GetIDForIdent("updateCntOk"));
 		} else {
 			if ($this->logLevel >= LogLevel::WARN) {
 				$this->AddLog(__FUNCTION__, "WARN: keine aktullen SmartMeter Messdaten vorhanden !");
