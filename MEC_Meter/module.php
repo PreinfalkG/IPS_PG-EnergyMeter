@@ -142,7 +142,7 @@ class MECMeter extends IPSModule {
 			$this->AddLog(__FUNCTION__, "TimerUpdate_MECM called ...", 0, true);
 		}
 
-		$result = $this->Update("Timer");
+		$result = $this->Update();
 	}
 
 	public function Update() {
