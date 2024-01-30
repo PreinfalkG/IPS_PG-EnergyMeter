@@ -5,8 +5,9 @@ declare(strict_types=1);
 trait MECMETER_FUNCTIONS {
 
     const JSON_API_URL = "http://%%IP-ADDRESS%%/wizard/public/api/measurements";
+    const JSON_DEVICEINFO_URL = "http://%%IP-ADDRESS%%/wizard/public/api/hardware";
 
-    protected function RequestMeterData() {
+    public function RequestMeterData() {
 
         $returnData = "{}";
 
@@ -18,7 +19,6 @@ trait MECMETER_FUNCTIONS {
         if ($this->logLevel >= LogLevel::COMMUNICATION) {
             $this->AddLog(__FUNCTION__, sprintf("Request JSON Data from '%s' [@%s]", $mecMeterApiUrl, $start));
         }
-
 
         $ch = curl_init();
         try {
@@ -87,7 +87,22 @@ trait MECMETER_FUNCTIONS {
             curl_close($ch);
         }
 
-        SetValueInteger($this->GetIDForIdent("lastProcessingTotalDuration"), ceil((microtime(true) - $start) * 1000));
+        SetValueInteger($this->GetIDForIdent("updateLastApiDuration"), ceil((microtime(true) - $start) * 1000));
         return $returnData;
     }
+
+
+    public function RequestDeviceInfo() {
+
+        $mecMeterDeviceInfoUrl = str_replace("%%IP-ADDRESS%%", $this->ReadPropertyString("MecMeter_IP"), SELF::JSON_DEVICEINFO_URL);
+        $response = @file_get_contents($mecMeterDeviceInfoUrl);
+        if($response === false) {
+            $error = error_get_last();
+            if ($this->logLevel >= LogLevel::ERROR) {
+                $this->AddLog(__FUNCTION__, sprintf("ERROR: %s", print_r($error, true)), 0, true);
+            }
+        } 
+        return $response;
+    }
+
 }

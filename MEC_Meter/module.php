@@ -49,6 +49,8 @@ class MECMeter extends IPSModule {
 		$this->RegisterPropertyBoolean('EnableAutoUpdate', false);
 		$this->RegisterPropertyInteger('AutoUpdateInterval', 15);
 		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.122");
+		$this->RegisterPropertyString('MecMeter_Info', "");
+		
 		$this->RegisterPropertyString('MecMeter_User', "admin");
 		$this->RegisterPropertyString('MecMeter_PW', "");
 		$this->RegisterPropertyInteger('LogLevel', 3);
@@ -135,21 +137,26 @@ class MECMeter extends IPSModule {
 	}
 
 
-	public function TimerUpdate_MECM() {
+	protected function TimerUpdate_MECM() {
 		if ($this->logLevel >= LogLevel::INFO) {
 			$this->AddLog(__FUNCTION__, "TimerUpdate_MECM called ...", 0, true);
 		}
 
-		$result = $this->Update();
+		$result = $this->Update("Timer");
 	}
-
 
 	public function Update() {
 
+		$returnValue = false;
 		$meterDataArr = $this->RequestMeterData();
 		if ($meterDataArr !== false) {
 
+			$datapoints = count($meterDataArr);
+			if ($this->logLevel >= LogLevel::DEBUG) {
+				$this->AddLog(__FUNCTION__, sprintf("'%s' data points available in JSON response", $datapoints));
+			}
 			$cnt = 0;
+			$start = microtime(true);
 			foreach (SELF::MECM_CONIG_ARR as $key => $configArr) {
 				if ($configArr[CONFIG::ENABLED]) {
 					$groupIdent = $configArr[CONFIG::GROUPIDENT];
@@ -161,6 +168,7 @@ class MECMeter extends IPSModule {
 						$dummyID = $this->CreateDummyInstanceByIdent($groupIdent, $groupName, $this->InstanceID, $groupPos, "");
 						if ($dummyID !== false) {
 							if (array_key_exists($key, $meterDataArr)) {
+								$cnt++;
 								$varValue = $meterDataArr[$key];
 								$this->SetVariableByIdent($varValue, $key, $configArr[CONFIG::NAME], $dummyID, $configArr[CONFIG::VARTYPE], $configArr[CONFIG::POSITION], $configArr[CONFIG::VARPROFILE], "", false, $configArr[CONFIG::ROUND], $configArr[CONFIG::FACTOR]);
 							} else {
@@ -176,17 +184,52 @@ class MECMeter extends IPSModule {
 					}
 				}
 			}
+			if ($this->logLevel >= LogLevel::DEBUG) {
+				$duration = $this->CalcDuration_ms($start);
+				$this->AddLog(__FUNCTION__, sprintf("%d data points extracted from the JSON response in %s ms", $cnt, $duration ));
+			}
+			$returnValue = $cnt;
 			$this->Increase_CounterVariable($this->GetIDForIdent("updateCntOk"));
 		} else {
 			if ($this->logLevel >= LogLevel::WARN) {
-				$this->AddLog(__FUNCTION__, "WARN: keine aktullen SmartMeter Messdaten vorhanden !");
+				$this->AddLog(__FUNCTION__, "WARN: No vaild JSON response received from meter!");
 			}
 		}
+		return $returnValue;
 	}
 
 
-	public function CheckConfig($trigger) {
+	public function GetMeterIP() {
+		return $this->ReadPropertyString("MecMeter_IP");
+	}
 
+	public function GetMeterInfo() {
+		return $this->ReadPropertyString("MecMeter_Info");
+	}
+
+	public function GetDeviceInfo() {
+
+		$deviceInfo = "MEC-Meter Device Info: ";
+		$result = $this->RequestDeviceInfo();
+		if($result !== false) {
+			$deviceInfoArr = json_decode($result, true);
+			foreach($deviceInfoArr as $key => $value) {
+				$deviceInfo .= sprintf("%s - %s: %s", PHP_EOL, $key, $value);	
+			}
+		} else {
+			$this->AddLog(__FUNCTION__, "WARN: problem to get device info", 0, true);
+		}
+		$deviceInfo .= sprintf("%s - IP: %s", PHP_EOL, $this->GetMeterIP());
+		$deviceInfo .= sprintf("%s - Note: %s", PHP_EOL, $this->GetMeterInfo());
+		$this->AddLog(__FUNCTION__, $deviceInfo, 0, true);
+		return $deviceInfo;
+	}
+
+	public function CheckConfig() {
+
+		$this->AddLog(__FUNCTION__, "MEC-Meter Modul Config: " . print_r(SELF::MECM_CONIG_ARR, true));
+
+		$returnValue = "";
 		$meterDataArr = $this->RequestMeterData();
 		if ($meterDataArr !== false) {
 			$this->Increase_CounterVariable($this->GetIDForIdent("updateCntOk"));
@@ -204,14 +247,15 @@ class MECMeter extends IPSModule {
 					}
 				}
 			}
-			if ($this->logLevel >= LogLevel::INFO) {
-				$this->AddLog(__FUNCTION__, sprintf("INFO SmartMeter Datenpunkte: %d NICHT vorhadnen | %d vorhanden", $cntNotFound, $cntFound));
-			}
+			$returnValue = sprintf("Match meter data points with Config Array: %d NICHT vorhadnen | %d vorhanden", $cntNotFound, $cntFound);
+			$this->AddLog(__FUNCTION__, $returnValue);
 		} else {
+			$returnValue = "WARN: No vaild JSON response received from meter!";
 			if ($this->logLevel >= LogLevel::WARN) {
-				$this->AddLog(__FUNCTION__, "WARN: keine aktullen SmartMeter Messdaten vorhanden !");
-			}
+				$this->AddLog(__FUNCTION__, $returnValue);
+			}			
 		}
+		return $returnValue;
 	}
 
 	public function ResetCounterVariables() {
@@ -221,7 +265,7 @@ class MECMeter extends IPSModule {
 		SetValue($this->GetIDForIdent("updateCntOk"), 0);
 		SetValue($this->GetIDForIdent("updateCntError"), 0);
 		SetValue($this->GetIDForIdent("updateLastError"), "");
-		SetValue($this->GetIDForIdent("updateLastDuration"), 0);
+		SetValue($this->GetIDForIdent("updateLastApiDuration"), 0);
 	}
 
 	protected function RegisterProfiles() {
@@ -298,7 +342,7 @@ class MECMeter extends IPSModule {
 		$this->RegisterVariableInteger("updateCntOk", "Update Cnt OK", "", 900);
 		$this->RegisterVariableInteger("updateCntError", "Update Cnt ERROR", "", 910);
 		$this->RegisterVariableString("updateLastError", "Update Last Error", "", 920);
-		$this->RegisterVariableInteger("lastProcessingTotalDuration", "Last API Request Duration [ms]", "", 930);
+		$this->RegisterVariableInteger("updateLastApiDuration", "Last API Request Duration [ms]", "", 930);
 
 		if ($this->logLevel >= LogLevel::DEBUG) {
 			$this->AddLog(__FUNCTION__, "Variables registered");

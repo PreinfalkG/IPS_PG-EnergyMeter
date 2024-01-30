@@ -53,7 +53,7 @@ trait ENERGYMETER_COMMON {
         if($this->logLevel >= LogLevel::TRACE) { $this->AddLog(__FUNCTION__, sprintf("%s [Cnt: %s | msg: %s ]", $profName, $this->ReadAttributeInteger($profAttrCnt), $msg)); }        
     }	
 
-    public function GetProfilingData(string $caller='?') {
+    protected function GetProfilingData(string $caller='?') {
         if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("GetProfilingData [%s] ...", $caller)); }
         $profDataArr = [];
         foreach(self::PROF_NAMES as $profName) {
@@ -67,7 +67,7 @@ trait ENERGYMETER_COMMON {
         return $profDataArr;				
     }
 
-    public function GetProfilingDataAsText(string $caller='?') {
+    protected function GetProfilingDataAsText(string $caller='?') {
         if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("GetProfilingDataAsText [%s] ...", $caller)); }
         $profilingInfo = "";
         foreach(self::PROF_NAMES as $profName) {
@@ -80,7 +80,7 @@ trait ENERGYMETER_COMMON {
         return $profilingInfo;
     }
 
-    public function Reset_ProfilingData(string $caller='?') {
+    protected function Reset_ProfilingData(string $caller='?') {
         if($this->logLevel >= LogLevel::INFO) { $this->AddLog(__FUNCTION__, sprintf("Reset_ProfilingData [%s] ...", $caller)); }
         foreach(self::PROF_NAMES as $profName) {
             $this->WriteAttributeInteger("prof_" . $profName, 0);
@@ -143,7 +143,7 @@ trait ENERGYMETER_COMMON {
                 IPS_SetIcon($instanceId, $icon);
             }
         } else {
-            if ($this->logLevel >= LogLevel::TRACE) {
+            if ($this->logLevel >= LogLevel::TEST) {
                 $this->AddLog(__FUNCTION__, sprintf("IPS-DummyInstance exists:: Name: %s | Ident: %s | ParentId: %s", $instanceName, $identName, $parentId)
                 );
             }
@@ -192,7 +192,7 @@ trait ENERGYMETER_COMMON {
                 $this->AddLog(__FUNCTION__, sprintf("WARN :: Cannot set Value '%s' to Varible '%s' [parentId: %s | identName: %s | varId: %s | type: %s]", print_r($value, true), $varName, $parentId, $identName, $varId, gettype($value)));
             }
         } else {
-            if ($this->logLevel >= LogLevel::TEST) {
+            if ($this->logLevel >= LogLevel::TRACE) {
                 $this->AddLog(__FUNCTION__, sprintf("Set Value '%s' to Varible '%s' [parentId: %s | identName: %s | varId: %s | type: %s]", print_r($value, true), $varName, $parentId, $identName, $varId, gettype($value)));
             }
         }
@@ -331,7 +331,7 @@ trait ENERGYMETER_COMMON {
     }
 
 
-    function implode_recursive(string $separator, array $array): string {
+    protected function implode_recursive(string $separator, array $array): string {
         $string = '';
         foreach ($array as $i => $a) {
             if (is_array($a)) {
@@ -351,7 +351,7 @@ trait ENERGYMETER_COMMON {
         SetValueInteger($varId, GetValueInteger($varId) + 1);
     }
 
-    function UnixTimestamp2String(int $timestamp) {
+    protected function UnixTimestamp2String(int $timestamp) {
         return date('d.m.Y H:i:s', $timestamp);
     }
 

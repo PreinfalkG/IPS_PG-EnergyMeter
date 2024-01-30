@@ -5,40 +5,52 @@
             "visible": true,
             "items": [
                 {
-                    "type": "Label",
-                    "label": "MAC-Meter  "
+                    "type": "ValidationTextBox",
+                    "caption": "Meter IP",
+                    "name": "MecMeter_IP"
                 },
                 {
                     "type": "ValidationTextBox",
-                    "caption": "IP",
-                    "name": "MecMeter_IP"
+                    "caption": "Meter Info (Sicherungskreis, Name, Note, ...)",
+                    "name": "MecMeter_Info"
+                }               
+            ]
+        },
+        {
+            "type": "RowLayout",
+            "visible": true,
+            "items": [        
+                {
+                    "type": "ValidationTextBox",
+                    "caption": "User",
+                    "name": "MecMeter_User"
+                },
+        
+                {
+                    "type": "ValidationTextBox",
+                    "caption": "Password",
+                    "name": "MecMeter_PW"
                 }
             ]
         },
-
         {
-            "type": "ValidationTextBox",
-            "caption": "User",
-            "name": "MecMeter_User"
-        },
-
-        {
-            "type": "ValidationTextBox",
-            "caption": "Password",
-            "name": "MecMeter_PW"
-        },
-
-        {
-            "name": "EnableAutoUpdate",
-            "type": "CheckBox",
-            "caption": "Auto Update"
-        },
-        {
-            "name": "AutoUpdateInterval",
-            "type": "NumberSpinner",
-            "caption": "Update Interval",
-            "suffix": "sec"
-        },
+            "type": "RowLayout",
+            "visible": true,
+            "items": [        
+                {
+                    "name": "EnableAutoUpdate",
+                    "type": "CheckBox",
+                    "caption": "Auto Update",
+                    "width": "200px"
+                },
+                {
+                    "name": "AutoUpdateInterval",
+                    "type": "NumberSpinner",
+                    "caption": "Update Interval",
+                    "suffix": "sec"
+                }
+            ]
+        },        
         {
             "name": "LogLevel",
             "type": "Select",
@@ -97,87 +109,87 @@
         {
             "type": "CheckBox",
             "enabled": true,
-            "caption": "Basic Infos",
+            "caption": "Basic Infos [F,T]",
             "name": "cb_Basic"
         },
         {
             "type": "CheckBox",
-            "caption": "AC-Spannung",
+            "caption": "AC-Spannung [VA,VB,VC,VAB,VBC,VCA,VPT,VT]",
             "name": "cb_Vx"
         },
         {
             "type": "CheckBox",
-            "caption": "AC-Strom",
+            "caption": "AC-Strom [IA,IB,IC,IN]",
             "name": "cb_Ix"
         },
         {
             "type": "CheckBox",
-            "caption": "DC-Strom",
+            "caption": "DC-Strom [IADC,IBDC,ICDC]",
             "name": "cb_DcI"
         },
         {
             "type": "CheckBox",
-            "caption": "Wirkleistung",
+            "caption": "Wirkleistung [PA,PB,PC,PT]",
             "name": "cb_Px"
         },
         {
             "type": "CheckBox",
-            "caption": "Wirkenergie Bezug",
+            "caption": "Wirkenergie Bezug [EFAA,EFAB,EFAC,EFAT]",
             "name": "cb_EFAx"
         },
         {
             "type": "CheckBox",
-            "caption": "Wirkenergie Einspeisung",
+            "caption": "Wirkenergie Einspeisung [ERAA,ERAB,ERAC,ERAT]",
             "name": "cb_ERAx"
         },
         {
             "type": "CheckBox",
-            "caption": "Blindenergie Bezug",
+            "caption": "Blindenergie Bezug [EFRA,EFRB,EFRC,EFRT]",
             "name": "cb_EFRx"
         },
         {
             "type": "CheckBox",
-            "caption": "Blindleistung Bezug",
+            "caption": "Blindleistung Bezug [QA,Qb,Qc,QT]",
             "name": "cb_Qx"
         },
         {
             "type": "CheckBox",
-            "caption": "Scheinenergie Bezug",
+            "caption": "Scheinenergie Bezug [ESA,ESB,ESC,EST]",
             "name": "cb_ESx"
         }        ,
         {
             "type": "CheckBox",
-            "caption": "Scheinleistung Bezug",
+            "caption": "Scheinleistung Bezug [SA,SB,SC,ST]",
             "name": "cb_Sx"
         },
         {
             "type": "CheckBox",
-            "caption": "Blindenergie Einspeisung",
+            "caption": "Blindenergie Einspeisung [ERRA,ERRB,ERRC,ERRT]",
             "name": "cb_ERRx"
         },
         {
             "type": "CheckBox",
-            "caption": "Leistungsfaktor",
+            "caption": "Leistungsfaktor [PFA,PFB,PFFC,PFT]",
             "name": "cb_PFx"
         },
         {
             "type": "CheckBox",
-            "caption": "Phasenwinkel",
+            "caption": "Phasenwinkel [IAA,IAB,IAC,UAA,UAB,UAC]",
             "name": "cb_xAx"
         },
         {
             "type": "CheckBox",
-            "caption": "Fundamental & Harmonic",
+            "caption": "Fundamental & Harmonic [...]",
             "name": "cb_F_H"
         },        
         {
             "type": "CheckBox",
-            "caption": "Advanced",
+            "caption": "Advanced [...]",
             "name": "cb_Adv"
         },        
         {
             "type": "CheckBox",
-            "caption": "Sonstige",
+            "caption": "Sonstige [EVT,EMT,ERSx,EFSxERTx,ERx,ERBx,ERCx]",
             "name": "cb_other"
         }
 
@@ -188,17 +200,22 @@
         {
             "type": "Button",
             "label": "Update",
-            "onClick": "MECM_Update($id, 'ModulForm');"
+            "onClick": "MECM_Update($id);"
         },
         {
             "type": "Button",
-            "label": "Check Config Entries",
-            "onClick": "MECM_CheckConfig($id, 'ModulForm');"
+            "label": "Show and Match Config Array Entries",
+            "onClick": "MECM_CheckConfig($id);"
+        }, 
+        {
+            "type": "Button",
+            "label": "Meter Hard- and Software Info",
+            "onClick": "MECM_GetDeviceInfo($id);"
         },        
         {
             "type": "Button",
             "caption": "Reset Counter Variables",
-            "onClick": "MECM_ResetCntVariables($id, 'ModulForm');"
+            "onClick": "MECM_ResetCounterVariables($id);"
         }
     ],
     "status": [
