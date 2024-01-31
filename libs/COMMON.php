@@ -174,7 +174,12 @@ trait ENERGYMETER_COMMON {
             IPS_SetName($varId, $varName);
             IPS_SetIdent($varId, $identName);
             IPS_SetPosition($varId, $position);
-            IPS_SetVariableCustomProfile($varId, $varProfile);
+            $result = IPS_SetVariableCustomProfile($varId, $varProfile);
+            if($result === false){
+                if ($this->logLevel >= LogLevel::ERROR) {
+                    $this->AddLog(__FUNCTION__, sprintf("WARN :: can not set CustomProfile '%s' to '%s'", $varProfile, $varId), 0, true);
+                }     
+            }
             if (!empty($icon)) {
                 IPS_SetIcon($varId, $icon);
             }
