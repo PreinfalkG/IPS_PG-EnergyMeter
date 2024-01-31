@@ -350,10 +350,10 @@ class MECMeter extends IPSModule {
 			IPS_SetVariableProfileValues("Percent.2", 0, 0, 1);
 		}
 
-		if (!IPS_VariableProfileExists('Duration.ms')) {
-			IPS_CreateVariableProfile('Duration.ms', VARIABLE::TYPE_INTEGER);
-			IPS_SetVariableProfileText('Duration.ms', "", " ms");
-			IPS_SetVariableProfileValues("Duration.ms", 0, 0, 1);
+		if (!IPS_VariableProfileExists('Duration.INT.ms')) {
+			IPS_CreateVariableProfile('Duration.INT.ms', VARIABLE::TYPE_INTEGER);
+			IPS_SetVariableProfileText('Duration.INT.ms', "", " ms");
+			IPS_SetVariableProfileValues("Duration.INT.ms", 0, 0, 1);
 		}		
 		
 
@@ -369,7 +369,7 @@ class MECMeter extends IPSModule {
 		$this->RegisterVariableInteger("updateCntOk", "Update Cnt OK", "", 900);
 		$this->RegisterVariableInteger("updateCntError", "Update Cnt ERROR", "", 910);
 		$this->RegisterVariableString("updateLastError", "Update Last Error", "", 920);
-		$this->RegisterVariableInteger("updateLastApiDuration", "Last API Request Duration [ms]", "", 930);
+		$this->RegisterVariableInteger("updateLastApiDuration", "Last API Request Duration", "Duration.INT.ms", 930);
 
 		if ($this->logLevel >= LogLevel::DEBUG) {
 			$this->AddLog(__FUNCTION__, "Variables registered");

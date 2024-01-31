@@ -26,7 +26,7 @@ trait MECMETER_HELPER {
         'F' => ['Frequency', VARIABLETYPE_FLOAT, 'SM.Hz.2', 1, 2, 'Basic', 'Basic', 10, 1, true],
         'T' => ['Internal Temperature', VARIABLETYPE_FLOAT, '~Temperature', 1, 2, 'Basic', 'Basic', 10, 2, true],
         'STATUS' => ['Status of the VPM ', VARIABLETYPE_INTEGER, '', 1, 0, 'Basic', 'Basic', 10, 3, true],
-        'TIME' => ['Operating Time (last fctory reset)', VARIABLETYPE_INTEGER, 'Duration.ms', 1, 0, 'Basic', 'Basic', 10, 4, true],
+        'TIME' => ['Operating Time (last fctory reset)', VARIABLETYPE_INTEGER, 'Duration.INT.ms', 1, 0, 'Basic', 'Basic', 10, 4, true],
         'SAMPLES' => ['Counter from the Quadrants updated values', VARIABLETYPE_INTEGER, '', 1, 0, 'Basic', 'Basic', 10, 5, true],
         'PA' => ['Leistung L1', VARIABLETYPE_FLOAT, 'SM.Watt.2', 1, 2, 'Px', 'Wirkleistung', 20, 6, true],
         'PB' => ['Leistung L2', VARIABLETYPE_FLOAT, 'SM.Watt.2', 1, 2, 'Px', 'Wirkleistung', 20, 7, true],
