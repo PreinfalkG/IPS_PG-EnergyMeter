@@ -49,30 +49,32 @@ class MECMeter extends IPSModule {
 		$this->RegisterPropertyBoolean('EnableAutoUpdate', false);
 		$this->RegisterPropertyInteger('AutoUpdateInterval', 15);
 		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.122");
+		$this->RegisterPropertyString('MecMeter_Name', "");
 		$this->RegisterPropertyString('MecMeter_Info', "");
 		
 		$this->RegisterPropertyString('MecMeter_User', "admin");
 		$this->RegisterPropertyString('MecMeter_PW', "");
 		$this->RegisterPropertyInteger('LogLevel', 3);
 
-		$this->RegisterPropertyBoolean('cb_Basic', false);
-		$this->RegisterPropertyBoolean('cb_Vx', true);				// AC-Spannung
-		$this->RegisterPropertyBoolean('cb_Ix', false);				// AC-Strom
-		$this->RegisterPropertyBoolean('cb_DcI', false);			// DC-Strom
-		$this->RegisterPropertyBoolean('cb_Px', true);				// Wirkleistung
-		$this->RegisterPropertyBoolean('cb_EFAx', false);			// Wirkenergie Bezug
-		$this->RegisterPropertyBoolean('cb_ERAx', false);			// Wirkenergie Einspeisung
-		$this->RegisterPropertyBoolean('cb_Qx', false);				// Blindleistung Bezug
-		$this->RegisterPropertyBoolean('cb_Sx', false);				// Scheinleistung Bezug
-		$this->RegisterPropertyBoolean('cb_EFRx', false);			// Blindenergie Bezug
-		$this->RegisterPropertyBoolean('cb_ESx', false);			// Scheinenergie Bezug
-
-		$this->RegisterPropertyBoolean('cb_ERRx', false);			// Blindenergie Einspeisung
-		$this->RegisterPropertyBoolean('cb_PFx', false);			// Leistungsfaktor
-		$this->RegisterPropertyBoolean('cb_xAx', false);			// Phasenwinkel
-		$this->RegisterPropertyBoolean('cb_F_H', false);			// Fundamental&Harmonic
-		$this->RegisterPropertyBoolean('cb_Adv', false);			// Advanced
-		$this->RegisterPropertyBoolean('cb_other', false);			// Sonstige
+		$this->RegisterPropertyBoolean('cb_Basic', true);		// Basid
+		$this->RegisterPropertyBoolean('cb_Px'   , true);		// Wirkleistung
+		$this->RegisterPropertyBoolean('cb_EFAx' , false);		// Wirkenergie Bezug
+		$this->RegisterPropertyBoolean('cb_ERAx' , false);		// Wirkenergie Einspeisung
+		$this->RegisterPropertyBoolean('cb_Vx'   , false);		// AC-Spannung
+		$this->RegisterPropertyBoolean('cb_Ix'   , false);		// AC-Strom
+		$this->RegisterPropertyBoolean('cb_IxDC' , false);		// Direct Current
+		$this->RegisterPropertyBoolean('cb_PFx'  , false);		// Leistungsfaktor
+		$this->RegisterPropertyBoolean('cb_xAx'  , false);		// Phasenwinkel
+		$this->RegisterPropertyBoolean('cb_RPx'  , false);		// Blindleistung
+		$this->RegisterPropertyBoolean('cb_REx'  , false);		// Blindenergie
+		$this->RegisterPropertyBoolean('cb_RE1_4', false);		// Blindenergie Quadrant 1 - 4
+		$this->RegisterPropertyBoolean('cb_APx'  , false);		// Scheinleistung
+		$this->RegisterPropertyBoolean('cb_AEx'  , false);		// Scheinenergie
+		$this->RegisterPropertyBoolean('cb_THD'  , false);		// THD+N
+		$this->RegisterPropertyBoolean('cb_FPx'  , false);		// Fundamental Power
+		$this->RegisterPropertyBoolean('cb_FEx'  , false);		// Fundamental Energy
+		$this->RegisterPropertyBoolean('cb_HPx'  , false);		// Harmonic Power
+		$this->RegisterPropertyBoolean('cb_HEx'  , false);		// Harmonic Energy
 
 		$this->RegisterTimer('TimerUpdate_MECM', 0, 'MECM_TimerUpdate_MECM(' . $this->InstanceID . ');');
 		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -123,8 +125,8 @@ class MECMeter extends IPSModule {
 			if ($this->logLevel >= LogLevel::INFO) {
 				$this->AddLog(__FUNCTION__, "Auto-Update stopped [TimerIntervall = 0]");
 			}
-		} else if ($updateInterval < 5) {
-			$updateInterval = 5;
+		} else if ($updateInterval < 1) {
+			$updateInterval = 1;
 			if ($this->logLevel >= LogLevel::INFO) {
 				$this->AddLog(__FUNCTION__, sprintf("Set Auto-Update Timer Intervall to %ss", $updateInterval));
 			}
@@ -137,7 +139,7 @@ class MECMeter extends IPSModule {
 	}
 
 
-	protected function TimerUpdate_MECM() {
+	public function TimerUpdate_MECM() {
 		if ($this->logLevel >= LogLevel::INFO) {
 			$this->AddLog(__FUNCTION__, "TimerUpdate_MECM called ...", 0, true);
 		}
@@ -186,7 +188,7 @@ class MECMeter extends IPSModule {
 			}
 			if ($this->logLevel >= LogLevel::DEBUG) {
 				$duration = $this->CalcDuration_ms($start);
-				$this->AddLog(__FUNCTION__, sprintf("%d data points extracted from the JSON response in %s ms", $cnt, $duration ));
+				$this->AddLog(__FUNCTION__, sprintf("%d data points extracted from JSON response in %s ms", $cnt, $duration ));
 			}
 			$returnValue = $cnt;
 			$this->Increase_CounterVariable($this->GetIDForIdent("updateCntOk"));
@@ -201,6 +203,10 @@ class MECMeter extends IPSModule {
 
 	public function GetMeterIP() {
 		return $this->ReadPropertyString("MecMeter_IP");
+	}
+
+	public function GetMeterName() {
+		return $this->ReadPropertyString("MecMeter_Name");
 	}
 
 	public function GetMeterInfo() {
@@ -220,6 +226,7 @@ class MECMeter extends IPSModule {
 			$this->AddLog(__FUNCTION__, "WARN: problem to get device info", 0, true);
 		}
 		$deviceInfo .= sprintf("%s - IP: %s", PHP_EOL, $this->GetMeterIP());
+		$deviceInfo .= sprintf("%s - Name: %s", PHP_EOL, $this->GetMeterName());
 		$deviceInfo .= sprintf("%s - Note: %s", PHP_EOL, $this->GetMeterInfo());
 		$this->AddLog(__FUNCTION__, $deviceInfo, 0, true);
 		return $deviceInfo;
@@ -318,10 +325,16 @@ class MECMeter extends IPSModule {
 			IPS_SetVariableProfileText('SM.kWh.3', "", " kWh");
 		}
 
-		if (!IPS_VariableProfileExists('SM.kVA.3')) {
-			IPS_CreateVariableProfile('SM.kVA.3', VARIABLE::TYPE_FLOAT);
-			IPS_SetVariableProfileDigits('SM.kVA.3', 3);
-			IPS_SetVariableProfileText('SM.kVA.3', "", " kVA");
+		if (!IPS_VariableProfileExists('SM.kvarh.3')) {
+			IPS_CreateVariableProfile('SM.kvarh.3', VARIABLE::TYPE_FLOAT);
+			IPS_SetVariableProfileDigits('SM.kvarh.3', 3);
+			IPS_SetVariableProfileText('SM.kvarh.3', "", " kvarh");
+		}
+
+		if (!IPS_VariableProfileExists('SM.kVAh.3')) {
+			IPS_CreateVariableProfile('SM.kVAh.3', VARIABLE::TYPE_FLOAT);
+			IPS_SetVariableProfileDigits('SM.kVAh.3', 3);
+			IPS_SetVariableProfileText('SM.kVAh.3', "", " kVAh");
 		}
 
 		if (!IPS_VariableProfileExists('DC.mA.3')) {
@@ -329,6 +342,20 @@ class MECMeter extends IPSModule {
 			IPS_SetVariableProfileDigits('DC.mA.3', 3);
 			IPS_SetVariableProfileText('DC.mA.3', "", " mA");
 		}
+
+		if (!IPS_VariableProfileExists('Percent.2')) {
+			IPS_CreateVariableProfile('Percent.2', VARIABLE::TYPE_FLOAT);
+			IPS_SetVariableProfileDigits('Percent.2', 3);
+			IPS_SetVariableProfileText('Percent.2', "", " %");
+			IPS_SetVariableProfileValues("Percent.2", 0, 0, 1);
+		}
+
+		if (!IPS_VariableProfileExists('Duration.ms')) {
+			IPS_CreateVariableProfile('Duration.ms', VARIABLE::TYPE_INTEGER);
+			IPS_SetVariableProfileText('Duration.ms', "", " ms");
+			IPS_SetVariableProfileValues("Duration.ms", 0, 0, 1);
+		}		
+		
 
 		if ($this->logLevel >= LogLevel::DEBUG) {
 			$this->AddLog(__FUNCTION__, "Variable Profiles registered");

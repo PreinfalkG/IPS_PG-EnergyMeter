@@ -11,11 +11,16 @@
                 },
                 {
                     "type": "ValidationTextBox",
-                    "caption": "Meter Info (Sicherungskreis, Name, Note, ...)",
-                    "name": "MecMeter_Info"
+                    "caption": "Meter Name",
+                    "name": "MecMeter_Name"
                 }               
             ]
         },
+        {
+            "type": "ValidationTextBox",
+            "caption": "Meter Info (Sicherungskreis, Note, ...)",
+            "name": "MecMeter_Info"
+        }, 
         {
             "type": "RowLayout",
             "visible": true,
@@ -103,29 +108,10 @@
             "label": " "
         },
         {
-            "type": "Label",
-            "label": "Request Data for:"
-        },
-        {
             "type": "CheckBox",
             "enabled": true,
-            "caption": "Basic Infos [F,T]",
+            "caption": "Basic Infos [F,T,STATUS,TIME,SAMPLES]",
             "name": "cb_Basic"
-        },
-        {
-            "type": "CheckBox",
-            "caption": "AC-Spannung [VA,VB,VC,VAB,VBC,VCA,VPT,VT]",
-            "name": "cb_Vx"
-        },
-        {
-            "type": "CheckBox",
-            "caption": "AC-Strom [IA,IB,IC,IN]",
-            "name": "cb_Ix"
-        },
-        {
-            "type": "CheckBox",
-            "caption": "DC-Strom [IADC,IBDC,ICDC]",
-            "name": "cb_DcI"
         },
         {
             "type": "CheckBox",
@@ -144,32 +130,22 @@
         },
         {
             "type": "CheckBox",
-            "caption": "Blindenergie Bezug [EFRA,EFRB,EFRC,EFRT]",
-            "name": "cb_EFRx"
+            "caption": "AC-Spannung [VA,VB,VC,VT,VAB,VBC,VCA,VPT]",
+            "name": "cb_Vx"
         },
         {
             "type": "CheckBox",
-            "caption": "Blindleistung Bezug [QA,Qb,Qc,QT]",
-            "name": "cb_Qx"
+            "caption": "AC-Strom [IA,IB,IC,IN,IN0]",
+            "name": "cb_Ix"
         },
         {
             "type": "CheckBox",
-            "caption": "Scheinenergie Bezug [ESA,ESB,ESC,EST]",
-            "name": "cb_ESx"
-        }        ,
-        {
-            "type": "CheckBox",
-            "caption": "Scheinleistung Bezug [SA,SB,SC,ST]",
-            "name": "cb_Sx"
+            "caption": "Direct Current [IADC,IBDC,ICDC]",
+            "name": "cb_IxDC"
         },
         {
             "type": "CheckBox",
-            "caption": "Blindenergie Einspeisung [ERRA,ERRB,ERRC,ERRT]",
-            "name": "cb_ERRx"
-        },
-        {
-            "type": "CheckBox",
-            "caption": "Leistungsfaktor [PFA,PFB,PFFC,PFT]",
+            "caption": "Leistungsfaktor [PFA,PFB,PFC,PFT]",
             "name": "cb_PFx"
         },
         {
@@ -179,21 +155,54 @@
         },
         {
             "type": "CheckBox",
-            "caption": "Fundamental & Harmonic [...]",
-            "name": "cb_F_H"
+            "caption": "Blindleistung [QA,QB,QC,QT]",
+            "name": "cb_RPx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Blindenergie [EFRA,EFRB,EFRC,EFRT,ERRA,ERRB,ERRC,ERRT]",
+            "name": "cb_REx"
         },        
         {
             "type": "CheckBox",
-            "caption": "Advanced [...]",
-            "name": "cb_Adv"
+            "caption": "Blindenergie Quadrant 1 - 4 [ERTx,ERAx,ERBx,ERCx]",
+            "name": "cb_RE1_4"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Scheinleistung [SA,SB,SC,ST]",
+            "name": "cb_APx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "Scheinenergie [ESA,ESB,ESC,EST,EVT,ERSA,ERSB,ERSC,ERST,EFSA,EFSB,EFSC,EFST]",
+            "name": "cb_AEx"
+        },
+        {
+            "type": "CheckBox",
+            "caption": "THD+N [THUA,THUB,THUC,THIA,THIB,THIC]",
+            "name": "cb_THD"
         },        
         {
             "type": "CheckBox",
-            "caption": "Sonstige [EVT,EMT,ERSx,EFSxERTx,ERx,ERBx,ERCx]",
-            "name": "cb_other"
-        }
-
-
+            "caption": "Fundamental Power [PAF,PBF,PCF,PTF]",
+            "name": "cb_FPx"
+        },        
+        {
+            "type": "CheckBox",
+            "caption": "Fundamental Energy [EFAF,EFBF,EFCF,EFTF,ERAF,ERBF,ERCF,ERTF]",
+            "name": "cb_FEx"
+        },        
+        {
+            "type": "CheckBox",
+            "caption": "Harmonic Power [PAH,PBH,PCH,PTH]",
+            "name": "cb_HPx"
+        },        
+        {
+            "type": "CheckBox",
+            "caption": "Fundamental Energy [EFAH,EFBH,EFCH,EFTH,ERAH,ERBH,ERCH,ERTH]",
+            "name": "cb_HEx"
+        }        
         
     ],
     "actions": [
