@@ -228,6 +228,10 @@ class MECMeter extends IPSModule {
 		return $this->ReadPropertyString("MecMeter_InfoL3");
 	}	
 
+	public function GetMeter_PW() {
+		return $this->ReadPropertyString("MecMeter_PW");
+	}	
+
 	public function GetDeviceInfo() {
 
 		$deviceInfo = "MEC-Meter Device Info: ";
@@ -242,7 +246,11 @@ class MECMeter extends IPSModule {
 		}
 		$deviceInfo .= sprintf("%s - IP: %s", PHP_EOL, $this->GetMeterIP());
 		$deviceInfo .= sprintf("%s - Name: %s", PHP_EOL, $this->GetMeterName());
-		$deviceInfo .= sprintf("%s - Note: %s", PHP_EOL, $this->GetMeterInfo());
+		$deviceInfo .= sprintf("%s - Info: %s", PHP_EOL, $this->GetMeterInfo());
+		$deviceInfo .= sprintf("%s - Info L1: %s", PHP_EOL, $this->GetMeterInfoL1());
+		$deviceInfo .= sprintf("%s - Info L2: %s", PHP_EOL, $this->GetMeterInfoL2());
+		$deviceInfo .= sprintf("%s - Info L3: %s", PHP_EOL, $this->GetMeterInfoL3());
+		$deviceInfo .= sprintf("%s - Password: %s", PHP_EOL, $this->GetMeter_PW());
 		$this->AddLog(__FUNCTION__, $deviceInfo, 0, true);
 		return $deviceInfo;
 	}

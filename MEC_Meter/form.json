@@ -47,7 +47,7 @@
                 },
         
                 {
-                    "type": "ValidationTextBox",
+                    "type": "PasswordTextBox",
                     "caption": "Password",
                     "name": "MecMeter_PW"
                 }
