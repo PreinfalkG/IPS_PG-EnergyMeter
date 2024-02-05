@@ -22,6 +22,21 @@
             "name": "MecMeter_Info"
         }, 
         {
+            "type": "ValidationTextBox",
+            "caption": "Meter Info - L1",
+            "name": "MecMeter_InfoL1"
+        },    
+        {
+            "type": "ValidationTextBox",
+            "caption": "Meter Info - L2",
+            "name": "MecMeter_InfoL2"
+        },    
+        {
+            "type": "ValidationTextBox",
+            "caption": "Meter Info - L3",
+            "name": "MecMeter_InfoL3"
+        },                    
+        {
             "type": "RowLayout",
             "visible": true,
             "items": [        

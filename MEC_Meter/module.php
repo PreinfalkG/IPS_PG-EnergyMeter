@@ -51,6 +51,9 @@ class MECMeter extends IPSModule {
 		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.122");
 		$this->RegisterPropertyString('MecMeter_Name', "");
 		$this->RegisterPropertyString('MecMeter_Info', "");
+		$this->RegisterPropertyString('MecMeter_InfoL1', "");
+		$this->RegisterPropertyString('MecMeter_InfoL2', "");
+		$this->RegisterPropertyString('MecMeter_InfoL3', "");
 		
 		$this->RegisterPropertyString('MecMeter_User', "admin");
 		$this->RegisterPropertyString('MecMeter_PW', "");
@@ -141,7 +144,7 @@ class MECMeter extends IPSModule {
 
 	public function TimerUpdate_MECM() {
 		if ($this->logLevel >= LogLevel::INFO) {
-			$this->AddLog(__FUNCTION__, "TimerUpdate_MECM called ...", 0, true);
+			$this->AddLog(__FUNCTION__, "TimerUpdate_MECM called ...");
 		}
 
 		$result = $this->Update();
@@ -212,6 +215,18 @@ class MECMeter extends IPSModule {
 	public function GetMeterInfo() {
 		return $this->ReadPropertyString("MecMeter_Info");
 	}
+
+	public function GetMeterInfoL1() {
+		return $this->ReadPropertyString("MecMeter_InfoL1");
+	}
+
+	public function GetMeterInfoL2() {
+		return $this->ReadPropertyString("MecMeter_InfoL2");
+	}
+	
+	public function GetMeterInfoL3() {
+		return $this->ReadPropertyString("MecMeter_InfoL3");
+	}	
 
 	public function GetDeviceInfo() {
 
