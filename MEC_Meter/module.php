@@ -232,26 +232,45 @@ class MECMeter extends IPSModule {
 		return $this->ReadPropertyString("MecMeter_PW");
 	}	
 
+
+	public function GetInstanzInfo() {
+		$infoArr = [];
+		$infoArr["Name"] = $this->GetMeterName();
+		$infoArr["Info"] = $this->GetMeterInfo();
+		$infoArr["InfoL1"] = $this->GetMeterInfoL1();
+		$infoArr["InfoL2"] = $this->GetMeterInfoL2();
+		$infoArr["InfoL3"] = $this->GetMeterInfoL3();
+		$infoArr["IP"] = $this->GetMeterIP();
+		$infoArr["UpdateCntOK"] = GetValue($this->GetIDForIdent("updateCntOk"));
+		$infoArr["UpdateCntERROR"] = GetValue($this->GetIDForIdent("updateCntError"));
+		$infoArr["UpdateLastError"] = GetValue($this->GetIDForIdent("updateLastError"));
+		$infoArr["UpdateLastErrorTS"] = IPS_GetVariable($this->GetIDForIdent("updateLastError"))["VariableUpdated"];
+		$infoArr["UpdateLastAPIDuration"] = GetValue($this->GetIDForIdent("updateLastApiDuration"));	
+		return $infoArr;
+	}
+
 	public function GetDeviceInfo() {
+		$result = $this->RequestDeviceInfo();
+		return json_decode($result, true);
+	}
+
+	public function GetAllInfosAsString($separator=PHP_EOL) {
 
 		$deviceInfo = "MEC-Meter Device Info: ";
-		$result = $this->RequestDeviceInfo();
-		if($result !== false) {
-			$deviceInfoArr = json_decode($result, true);
+		$deviceInfoArr = $this->GetDeviceInfo();
+		if($deviceInfoArr !== false) {
 			foreach($deviceInfoArr as $key => $value) {
-				$deviceInfo .= sprintf("%s - %s: %s", PHP_EOL, $key, $value);	
+				$deviceInfo .= sprintf("%s%s: %s", $separator, $key, $value);	
 			}
 		} else {
 			$this->AddLog(__FUNCTION__, "WARN: problem to get device info", 0, true);
 		}
-		$deviceInfo .= sprintf("%s - IP: %s", PHP_EOL, $this->GetMeterIP());
-		$deviceInfo .= sprintf("%s - Name: %s", PHP_EOL, $this->GetMeterName());
-		$deviceInfo .= sprintf("%s - Info: %s", PHP_EOL, $this->GetMeterInfo());
-		$deviceInfo .= sprintf("%s - Info L1: %s", PHP_EOL, $this->GetMeterInfoL1());
-		$deviceInfo .= sprintf("%s - Info L2: %s", PHP_EOL, $this->GetMeterInfoL2());
-		$deviceInfo .= sprintf("%s - Info L3: %s", PHP_EOL, $this->GetMeterInfoL3());
-		$deviceInfo .= sprintf("%s - Password: %s", PHP_EOL, $this->GetMeter_PW());
-		$this->AddLog(__FUNCTION__, $deviceInfo, 0, true);
+
+		$instanzInfoAdd = $this->GetInstanzInfo() ;
+		foreach($instanzInfoAdd as $key => $value) {
+			$deviceInfo .= sprintf("%s%s: %s", $separator, $key, $value);	
+		}
+		$deviceInfo .= sprintf("%sInstanzId: %s", $separator, $this->InstanceID);	
 		return $deviceInfo;
 	}
 
