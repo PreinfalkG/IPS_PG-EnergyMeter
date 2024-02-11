@@ -234,18 +234,33 @@ class MECMeter extends IPSModule {
 
 
 	public function GetInstanzInfo() {
+
+		$ipAddress = $this->GetMeterIP();
+
 		$infoArr = [];
 		$infoArr["Name"] = $this->GetMeterName();
 		$infoArr["Info"] = $this->GetMeterInfo();
 		$infoArr["InfoL1"] = $this->GetMeterInfoL1();
 		$infoArr["InfoL2"] = $this->GetMeterInfoL2();
 		$infoArr["InfoL3"] = $this->GetMeterInfoL3();
-		$infoArr["IP"] = $this->GetMeterIP();
+		
+		$infoArr["IP"] = $ipAddress;
+		$infoArr["UrlExpertenansicht"] = "http://".$ipAddress."/wizard/public/measure.html";
+		$infoArr["UrlJsonAPI"] = "http://".$ipAddress."/wizard/public/api/measurements";
+		$infoArr["UrlXmlAPI"] = "http://".$ipAddress."/wizard/public/api/rest";
+		
+		$infoArr["UpdateInterval"] = $this->GetTimerInterval("TimerUpdate_MECM");
 		$infoArr["UpdateCntOK"] = GetValue($this->GetIDForIdent("updateCntOk"));
 		$infoArr["UpdateCntERROR"] = GetValue($this->GetIDForIdent("updateCntError"));
 		$infoArr["UpdateLastError"] = GetValue($this->GetIDForIdent("updateLastError"));
 		$infoArr["UpdateLastErrorTS"] = IPS_GetVariable($this->GetIDForIdent("updateLastError"))["VariableUpdated"];
 		$infoArr["UpdateLastAPIDuration"] = GetValue($this->GetIDForIdent("updateLastApiDuration"));	
+
+		$infoArr["InstanzId"] = $this->InstanceID;	
+		$infoArr["varId_UpdateCntOk"] = $this->GetIDForIdent("updateCntOk");
+		$infoArr["varId_UpdateCntError"] = $this->GetIDForIdent("updateCntError");
+		$infoArr["varId_UpdateLastError"] = $this->GetIDForIdent("updateLastError");
+		$infoArr["varId_UpdateLastApiDuration"] = $this->GetIDForIdent("updateLastApiDuration");
 		return $infoArr;
 	}
 
@@ -270,7 +285,6 @@ class MECMeter extends IPSModule {
 		foreach($instanzInfoAdd as $key => $value) {
 			$deviceInfo .= sprintf("%s%s: %s", $separator, $key, $value);	
 		}
-		$deviceInfo .= sprintf("%sInstanzId: %s", $separator, $this->InstanceID);	
 		return $deviceInfo;
 	}
 
