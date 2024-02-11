@@ -50,6 +50,8 @@ class MECMeter extends IPSModule {
 		$this->RegisterPropertyInteger('AutoUpdateInterval', 15);
 		$this->RegisterPropertyString('MecMeter_IP', "10.0.11.122");
 		$this->RegisterPropertyString('MecMeter_Name', "");
+		$this->RegisterPropertyString('MecMeter_SerNr', "");
+		
 		$this->RegisterPropertyString('MecMeter_Info', "");
 		$this->RegisterPropertyString('MecMeter_InfoL1', "");
 		$this->RegisterPropertyString('MecMeter_InfoL2', "");
@@ -212,6 +214,10 @@ class MECMeter extends IPSModule {
 		return $this->ReadPropertyString("MecMeter_Name");
 	}
 
+	public function GetMeterSerNr() {
+		return $this->ReadPropertyString("MecMeter_SerNr");
+	}	
+	
 	public function GetMeterInfo() {
 		return $this->ReadPropertyString("MecMeter_Info");
 	}
@@ -239,6 +245,7 @@ class MECMeter extends IPSModule {
 
 		$infoArr = [];
 		$infoArr["Name"] = $this->GetMeterName();
+		$infoArr["SerNr"] = $this->GetMeterSerNr();
 		$infoArr["Info"] = $this->GetMeterInfo();
 		$infoArr["InfoL1"] = $this->GetMeterInfoL1();
 		$infoArr["InfoL2"] = $this->GetMeterInfoL2();

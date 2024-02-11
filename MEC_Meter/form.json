@@ -11,11 +11,16 @@
                 },
                 {
                     "type": "ValidationTextBox",
-                    "caption": "Meter Name",
-                    "name": "MecMeter_Name"
+                    "caption": "Meter SerNr",
+                    "name": "MecMeter_SerNr"
                 }               
             ]
         },
+        {
+            "type": "ValidationTextBox",
+            "caption": "Meter Name",
+            "name": "MecMeter_Name"
+        },           
         {
             "type": "ValidationTextBox",
             "caption": "Meter Info (Sicherungskreis, Note, ...)",
