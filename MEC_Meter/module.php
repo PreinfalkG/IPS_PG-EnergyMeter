@@ -238,8 +238,12 @@ class MECMeter extends IPSModule {
 		return $this->ReadPropertyString("MecMeter_PW");
 	}	
 
+	public function GetDeviceInfo() {
+		$result = $this->RequestDeviceInfo();
+		return json_decode($result, true);
+	}
 
-	public function GetInstanzInfo() {
+	public function GetInstanceInfo($includeDeviceInfo=false) {
 
 		$ipAddress = $this->GetMeterIP();
 
@@ -268,31 +272,30 @@ class MECMeter extends IPSModule {
 		$infoArr["varId_UpdateCntError"] = $this->GetIDForIdent("updateCntError");
 		$infoArr["varId_UpdateLastError"] = $this->GetIDForIdent("updateLastError");
 		$infoArr["varId_UpdateLastApiDuration"] = $this->GetIDForIdent("updateLastApiDuration");
+
+		if($includeDeviceInfo) {
+			$deviceInfoArr = $this->GetDeviceInfo();
+			if($deviceInfoArr !== false) {
+				foreach($deviceInfoArr as $key => $value) {
+					$infoArr[$key] = $value;
+				}
+			}
+		}
 		return $infoArr;
 	}
 
-	public function GetDeviceInfo() {
-		$result = $this->RequestDeviceInfo();
-		return json_decode($result, true);
-	}
 
-	public function GetAllInfosAsString($separator=PHP_EOL) {
-
-		$deviceInfo = "MEC-Meter Device Info: ";
-		$deviceInfoArr = $this->GetDeviceInfo();
-		if($deviceInfoArr !== false) {
-			foreach($deviceInfoArr as $key => $value) {
-				$deviceInfo .= sprintf("%s%s: %s", $separator, $key, $value);	
+	public function GetInstanceInfoAsString($includeDeviceInfo=false, $separator=PHP_EOL) {
+		$meterDetails = "MEC-Meter Details: ";
+		$meterDetailsArr = $this->GetInstanceInfo($includeDeviceInfo);
+		foreach($meterDetailsArr as $key => $value) {
+			if($value === false) {
+				$meterDetails .= sprintf("%s%s: %s", $separator, $key, "false");	
+			} else {
+				$meterDetails .= sprintf("%s%s: %s", $separator, $key, $value);	
 			}
-		} else {
-			$this->AddLog(__FUNCTION__, "WARN: problem to get device info", 0, true);
 		}
-
-		$instanzInfoAdd = $this->GetInstanzInfo() ;
-		foreach($instanzInfoAdd as $key => $value) {
-			$deviceInfo .= sprintf("%s%s: %s", $separator, $key, $value);	
-		}
-		return $deviceInfo;
+		return $meterDetails;
 	}
 
 	public function CheckConfig() {
@@ -336,6 +339,7 @@ class MECMeter extends IPSModule {
 		SetValue($this->GetIDForIdent("updateCntError"), 0);
 		SetValue($this->GetIDForIdent("updateLastError"), "");
 		SetValue($this->GetIDForIdent("updateLastApiDuration"), 0);
+		return true;
 	}
 
 	protected function RegisterProfiles() {
