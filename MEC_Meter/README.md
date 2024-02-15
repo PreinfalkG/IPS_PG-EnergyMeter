@@ -1,5 +1,5 @@
-# MECMeter
-Beschreibung des Moduls.
+# MEC-Meter
+Modul zum Auslesen der MEC-Meter JSON API Schnittstelle.
 
 ### Inhaltsverzeichnis
 
