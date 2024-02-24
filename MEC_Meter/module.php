@@ -240,7 +240,13 @@ class MECMeter extends IPSModule {
 
 	public function GetDeviceInfo() {
 		$result = $this->RequestDeviceInfo();
-		return json_decode($result, true);
+		if($result !== false) {
+			return json_decode($result, true);
+		} else {
+			$arr = array();
+			$arr["WARN"] = "Device info not available";
+			return $arr;
+		}
 	}
 
 	public function GetInstanceInfo($includeDeviceInfo=false) {
