@@ -246,8 +246,8 @@ class MECMeter extends IPSModule {
 			$arr = array();
 			$arr["SoftwareVersion"] = "n.a.";
 			$arr["HardwareVersion"] = "n.a.";
-			$arr["HasPLC"] = "n.a.";
-			$arr["HasSD"] = "n.a.";
+			$arr["HasPLC"] = false;
+			$arr["HasSD"] = false;
 			return $arr;
 		}
 	}
