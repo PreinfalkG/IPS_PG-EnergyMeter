@@ -243,7 +243,12 @@ class MECMeter extends IPSModule {
 		if($result !== false) {
 			return json_decode($result, true);
 		} else {
-			return array();
+			$arr = array();
+			$arr["SoftwareVersion"] = "n.a.";
+			$arr["HardwareVersion"] = "n.a.";
+			$arr["HasPLC"] = "n.a.";
+			$arr["HasSD"] = "n.a.";
+			return $arr;
 		}
 	}
 
