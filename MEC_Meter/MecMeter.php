@@ -95,7 +95,8 @@ trait MECMETER_FUNCTIONS {
     public function RequestDeviceInfo() {
 
         $mecMeterDeviceInfoUrl = str_replace("%%IP-ADDRESS%%", $this->ReadPropertyString("MecMeter_IP"), SELF::JSON_DEVICEINFO_URL);
-        $response = @file_get_contents($mecMeterDeviceInfoUrl);
+        //$response = @file_get_contents($mecMeterDeviceInfoUrl);
+        $response = @file_get_contents($mecMeterDeviceInfoUrl, false, stream_context_create(["http"=>["timeout"=>1]]));
         if($response === false) {
             $error = error_get_last();
             if ($this->logLevel >= LogLevel::ERROR) {
