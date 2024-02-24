@@ -243,9 +243,7 @@ class MECMeter extends IPSModule {
 		if($result !== false) {
 			return json_decode($result, true);
 		} else {
-			$arr = array();
-			$arr["WARN"] = "Device info not available";
-			return $arr;
+			return array();
 		}
 	}
 
