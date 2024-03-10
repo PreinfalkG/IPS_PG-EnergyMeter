@@ -252,7 +252,7 @@ class MECMeter extends IPSModule {
 		}
 	}
 
-	public function GetInstanceInfo($includeDeviceInfo=false) {
+	public function GetInstanceInfo(bool $includeDeviceInfo=false) {
 
 		$ipAddress = $this->GetMeterIP();
 
@@ -294,7 +294,7 @@ class MECMeter extends IPSModule {
 	}
 
 
-	public function GetInstanceInfoAsString($includeDeviceInfo=false, $separator=PHP_EOL) {
+	public function GetInstanceInfoAsString(bool $includeDeviceInfo=false, string $separator=PHP_EOL) {
 		$meterDetails = "MEC-Meter Details: ";
 		$meterDetailsArr = $this->GetInstanceInfo($includeDeviceInfo);
 		foreach($meterDetailsArr as $key => $value) {
